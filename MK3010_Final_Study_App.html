@@ -4,231 +4,367 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MK 3010 Complete Study App — Kenneth Hill</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f1117;
-    --card: #1a1d27;
-    --card2: #22263a;
-    --accent: #4f8ef7;
-    --accent2: #7c5cbf;
-    --green: #22c55e;
-    --red: #ef4444;
-    --yellow: #f59e0b;
-    --text: #e8eaf0;
-    --muted: #8b8fa8;
-    --border: #2d3150;
-    --ch1: #e11d48;
-    --ch2: #f97316;
-    --ch3: #eab308;
-    --ch4: #84cc16;
-    --ch5: #14b8a6;
-    --ch7: #6366f1;
-    --ch8: #ec4899;
-    --ch9: #f43f5e;
-    --ch10: #0ea5e9;
-    --ch12: #a855f7;
-    --ch13: #3b82f6;
-    --ch15: #8b5cf6;
-    --ch16: #06b6d4;
-    --ch17: #f59e0b;
-    --ch18: #10b981;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+:root {
+  --bg: #0a0f1e;
+  --surface: rgba(16,22,48,0.72);
+  --surface2: rgba(22,30,64,0.90);
+  --border: rgba(255,255,255,0.10);
+  --border2: rgba(255,255,255,0.06);
+  --text: #f0f3ff;
+  --muted: #8a97c4;
+  --faint: #5a6494;
+  --primary: #7c8cff;
+  --primary2: #5eead4;
+  --gold: #fbbf24;
+  --green: #34d399;
+  --red: #fb7185;
+  --yellow: #fbbf24;
+  --accent: #7c8cff;
+  --card: rgba(16,22,48,0.72);
+  --card2: rgba(22,30,64,0.88);
+  --shadow: 0 20px 60px rgba(0,0,0,0.4);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-lg: 28px;
+  --font-body: 'Satoshi', Inter, system-ui, sans-serif;
+  --font-display: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  /* chapter colors */
+  --ch1:#e11d48; --ch2:#f97316; --ch3:#eab308; --ch4:#84cc16; --ch5:#14b8a6;
+  --ch7:#6366f1; --ch8:#ec4899; --ch9:#f43f5e; --ch10:#0ea5e9; --ch12:#a855f7;
+  --ch13:#7c8cff; --ch15:#8b5cf6; --ch16:#06b6d4; --ch17:#fbbf24; --ch18:#10b981;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  font-size:15px;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 8% 12%, rgba(124,140,255,0.22) 0%, transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(94,234,212,0.14) 0%, transparent 25%),
+    radial-gradient(circle at 50% 80%, rgba(124,140,255,0.08) 0%, transparent 40%),
+    linear-gradient(180deg,#0a0f1e 0%,#0e1428 50%,#080c1a 100%);
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:40px 40px;
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
+  pointer-events:none;z-index:0;
+}
+button,input{font:inherit;cursor:pointer}
+a{color:inherit}
 
-  nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
-  nav .logo { font-size: 18px; font-weight: 700; color: var(--accent); }
-  nav .subtitle { color: var(--muted); font-size: 13px; }
-  nav .spacer { flex: 1; }
-  nav .score-badge { background: var(--card2); border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; font-size: 13px; }
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:14px;
+  padding:14px 24px;margin:12px auto;
+  max-width:1200px;width:calc(100% - 24px);
+  background:rgba(10,15,30,0.75);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+.brand-mark{
+  width:42px;height:42px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  box-shadow:0 8px 24px rgba(124,140,255,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:900;font-size:17px;color:#fff;
+}
+.brand-text .logo{font-family:var(--font-display);font-size:16px;font-weight:800;letter-spacing:-0.03em;}
+.brand-text .subtitle{font-size:11px;color:var(--muted);}
+.spacer{flex:1}
+.score-badge{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  padding:7px 16px;border-radius:999px;font-size:12px;font-weight:600;
+}
+.reset-btn{
+  background:none;border:1px solid rgba(255,255,255,0.1);
+  color:var(--faint);padding:7px 14px;border-radius:999px;font-size:11px;
+  transition:all .2s;
+}
+.reset-btn:hover{border-color:var(--red);color:var(--red);}
 
-  .home { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
-  .hero { text-align: center; margin-bottom: 40px; }
-  .hero h1 { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
-  .hero p { color: var(--muted); font-size: 15px; }
-  .exam-info { background: linear-gradient(135deg, #1e2240, #1a2535); border: 1px solid #2d4060; border-radius: 12px; padding: 18px 24px; margin-bottom: 36px; display: flex; gap: 32px; flex-wrap: wrap; }
-  .exam-info .item { display: flex; flex-direction: column; gap: 2px; }
-  .exam-info .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
-  .exam-info .value { font-size: 15px; font-weight: 600; color: var(--accent); }
+/* ── LAYOUT ── */
+.home,.quiz-screen,.flashcard-screen,.terms-screen{
+  max-width:1100px;margin:0 auto;padding:24px 12px 48px;position:relative;z-index:1;
+}
 
-  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 12px; margin-top: 28px; }
-  .chapters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 8px; }
-  .chapter-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; }
-  .chapter-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-  .chapter-card.ch1::before { background: var(--ch1); }
-  .chapter-card.ch2::before { background: var(--ch2); }
-  .chapter-card.ch3::before { background: var(--ch3); }
-  .chapter-card.ch4::before { background: var(--ch4); }
-  .chapter-card.ch5::before { background: var(--ch5); }
-  .chapter-card.ch7::before { background: var(--ch7); }
-  .chapter-card.ch8::before { background: var(--ch8); }
-  .chapter-card.ch9::before { background: var(--ch9); }
-  .chapter-card.ch10::before { background: var(--ch10); }
-  .chapter-card.ch12::before { background: var(--ch12); }
-  .chapter-card.ch13::before { background: var(--ch13); }
-  .chapter-card.ch15::before { background: var(--ch15); }
-  .chapter-card.ch16::before { background: var(--ch16); }
-  .chapter-card.ch17::before { background: var(--ch17); }
-  .chapter-card.ch18::before { background: var(--ch18); }
-  .chapter-card:hover { transform: translateY(-2px); border-color: var(--accent); }
-  .chapter-card .ch-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
-  .chapter-card .ch-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
-  .chapter-card .ch-count { font-size: 13px; color: var(--muted); }
-  .chapter-card .ch-progress { margin-top: 12px; background: var(--card2); height: 4px; border-radius: 2px; overflow: hidden; }
-  .chapter-card .ch-bar { height: 100%; border-radius: 2px; transition: width .3s; }
-  .ch1 .ch-bar { background: var(--ch1); }
-  .ch2 .ch-bar { background: var(--ch2); }
-  .ch3 .ch-bar { background: var(--ch3); }
-  .ch4 .ch-bar { background: var(--ch4); }
-  .ch5 .ch-bar { background: var(--ch5); }
-  .ch7 .ch-bar { background: var(--ch7); }
-  .ch8 .ch-bar { background: var(--ch8); }
-  .ch9 .ch-bar { background: var(--ch9); }
-  .ch10 .ch-bar { background: var(--ch10); }
-  .ch12 .ch-bar { background: var(--ch12); }
-  .ch13 .ch-bar { background: var(--ch13); }
-  .ch15 .ch-bar { background: var(--ch15); }
-  .ch16 .ch-bar { background: var(--ch16); }
-  .ch17 .ch-bar { background: var(--ch17); }
-  .ch18 .ch-bar { background: var(--ch18); }
-  .final-badge { display: inline-block; background: #2a1f00; border: 1px solid var(--yellow); color: var(--yellow); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; letter-spacing: 0.5px; }
+/* ── HERO ── */
+.hero{text-align:center;margin-bottom:28px;}
+.hero h1{font-family:var(--font-display);font-size:clamp(26px,4vw,38px);font-weight:900;letter-spacing:-0.05em;margin-bottom:8px;}
+.hero p{color:var(--muted);font-size:14px;}
 
-  /* DAILY PLAN */
-  .daily-plan { background: linear-gradient(135deg, #0f1f35, #111827); border: 1px solid #1e3a5f; border-radius: 16px; padding: 22px 24px; margin-bottom: 28px; }
-  .daily-plan-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-  .daily-plan-title { font-size: 18px; font-weight: 800; }
-  .countdown-box { background: #0a1628; border: 1px solid #1e3a5f; border-radius: 10px; padding: 8px 16px; text-align: center; }
-  .countdown-num { font-size: 22px; font-weight: 900; color: #f59e0b; line-height: 1; }
-  .countdown-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
-  .day-cards { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
-  .day-pill { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid var(--border); color: var(--muted); background: var(--card2); white-space: nowrap; }
-  .day-pill.today { background: #1e3a5f; border-color: #4f8ef7; color: #fff; }
-  .day-pill.done { background: #0f2a1a; border-color: #22c55e; color: #22c55e; }
-  .day-pill.exam-day { background: #2a1f00; border-color: #f59e0b; color: #f59e0b; }
-  .today-detail { background: var(--card2); border-radius: 12px; padding: 18px 20px; }
-  .today-detail h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
-  .today-goal { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
-  .today-chapters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-  .today-ch-tag { padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; }
-  .start-today-btn { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 12px 24px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; }
-  .start-today-btn:hover { opacity: .85; }
-  .exam-eve-msg { font-size: 14px; line-height: 1.7; color: var(--text); }
-  .exam-now-msg { font-size: 18px; font-weight: 800; color: #f59e0b; text-align: center; padding: 12px; }
+/* ── EXAM INFO BAR ── */
+.exam-info{
+  display:flex;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(135deg,rgba(20,28,60,0.8),rgba(14,20,48,0.9));
+  border:1px solid rgba(124,140,255,0.2);
+  border-radius:var(--radius);padding:18px 24px;margin-bottom:24px;
+  backdrop-filter:blur(12px);
+}
+.exam-info .item{display:flex;flex-direction:column;gap:3px;min-width:100px;}
+.exam-info .label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--faint);}
+.exam-info .value{font-size:14px;font-weight:700;color:var(--primary);}
 
-  .mode-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
-  .mode-btn { flex: 1; min-width: 200px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; cursor: pointer; text-align: center; transition: all .2s; }
-  .mode-btn:hover { border-color: var(--accent); background: var(--card2); }
-  .mode-btn .mode-icon { font-size: 28px; margin-bottom: 8px; }
-  .mode-btn .mode-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .mode-btn .mode-desc { font-size: 12px; color: var(--muted); }
+/* ── DAILY PLAN ── */
+.daily-plan{
+  background:linear-gradient(135deg,rgba(12,20,50,0.85),rgba(8,14,36,0.9));
+  border:1px solid rgba(124,140,255,0.18);
+  border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:28px;
+  backdrop-filter:blur(16px);
+}
+.daily-plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.daily-plan-title{font-family:var(--font-display);font-size:17px;font-weight:800;letter-spacing:-0.03em;}
+.countdown-box{background:rgba(0,0,0,0.3);border:1px solid rgba(251,191,36,0.25);border-radius:12px;padding:8px 18px;text-align:center;}
+.countdown-num{font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--gold);line-height:1;}
+.countdown-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);}
+.day-cards{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.day-pill{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--border2);color:var(--faint);background:rgba(255,255,255,0.04);white-space:nowrap;transition:all .2s;}
+.day-pill.today{background:rgba(124,140,255,0.15);border-color:rgba(124,140,255,0.4);color:#fff;}
+.day-pill.done{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3);color:var(--green);}
+.day-pill.exam-day{background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.3);color:var(--gold);}
+.today-detail{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:16px;padding:18px 20px;}
+.today-detail h3{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--primary);margin-bottom:8px;}
+.today-goal{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+.today-chapters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.today-ch-tag{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;}
+.start-today-btn{
+  width:100%;background:linear-gradient(135deg,var(--primary),#9f7aea);
+  color:#fff;border:none;border-radius:12px;padding:13px 24px;
+  font-size:14px;font-weight:700;transition:all .2s;
+  box-shadow:0 8px 24px rgba(124,140,255,0.25);
+}
+.start-today-btn:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(124,140,255,0.35);}
 
-  .quiz-screen { max-width: 740px; margin: 0 auto; padding: 30px 20px; display: none; }
-  .quiz-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-  .quiz-header .back-btn { background: var(--card); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; }
-  .quiz-header .back-btn:hover { border-color: var(--accent); }
-  .quiz-header .quiz-title { font-size: 16px; font-weight: 700; }
-  .quiz-header .quiz-info { color: var(--muted); font-size: 13px; margin-left: auto; }
+/* ── SECTION LABELS ── */
+.section-label{font-family:var(--font-display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:12px;}
 
-  .progress-bar { background: var(--card2); height: 6px; border-radius: 3px; margin-bottom: 28px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .4s; }
+/* ── CHAPTER CARDS ── */
+.chapters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:12px;}
+.chapter-card{
+  position:relative;
+  background:linear-gradient(160deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:20px;cursor:pointer;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  overflow:hidden;
+}
+.chapter-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;}
+.chapter-card.ch1::before{background:var(--ch1);}
+.chapter-card.ch2::before{background:var(--ch2);}
+.chapter-card.ch3::before{background:var(--ch3);}
+.chapter-card.ch4::before{background:var(--ch4);}
+.chapter-card.ch5::before{background:var(--ch5);}
+.chapter-card.ch7::before{background:var(--ch7);}
+.chapter-card.ch8::before{background:var(--ch8);}
+.chapter-card.ch9::before{background:var(--ch9);}
+.chapter-card.ch10::before{background:var(--ch10);}
+.chapter-card.ch12::before{background:var(--ch12);}
+.chapter-card.ch13::before{background:var(--ch13);}
+.chapter-card.ch15::before{background:var(--ch15);}
+.chapter-card.ch16::before{background:var(--ch16);}
+.chapter-card.ch17::before{background:var(--ch17);}
+.chapter-card.ch18::before{background:var(--ch18);}
+.chapter-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.16);box-shadow:0 16px 40px rgba(0,0,0,0.3);}
+.ch-num{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--faint);margin-bottom:6px;}
+.ch-title{font-family:var(--font-display);font-size:15px;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em;}
+.ch-count{font-size:12px;color:var(--muted);}
+.ch-progress{margin-top:12px;background:rgba(255,255,255,0.07);height:4px;border-radius:2px;overflow:hidden;}
+.ch-bar{height:100%;border-radius:2px;transition:width .4s ease;}
+.ch1 .ch-bar{background:var(--ch1);}
+.ch2 .ch-bar{background:var(--ch2);}
+.ch3 .ch-bar{background:var(--ch3);}
+.ch4 .ch-bar{background:var(--ch4);}
+.ch5 .ch-bar{background:var(--ch5);}
+.ch7 .ch-bar{background:var(--ch7);}
+.ch8 .ch-bar{background:var(--ch8);}
+.ch9 .ch-bar{background:var(--ch9);}
+.ch10 .ch-bar{background:var(--ch10);}
+.ch12 .ch-bar{background:var(--ch12);}
+.ch13 .ch-bar{background:var(--ch13);}
+.ch15 .ch-bar{background:var(--ch15);}
+.ch16 .ch-bar{background:var(--ch16);}
+.ch17 .ch-bar{background:var(--ch17);}
+.ch18 .ch-bar{background:var(--ch18);}
+.final-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 10px;border-radius:999px;margin-bottom:8px;
+  background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);
+  color:var(--gold);font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+}
 
-  .question-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
-  .question-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
-  .question-text { font-size: 17px; line-height: 1.6; font-weight: 600; margin-bottom: 24px; }
+/* ── MODE BUTTONS ── */
+.mode-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;}
+.mode-btn{
+  flex:1;min-width:180px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);padding:20px;
+  text-align:center;transition:all .2s;cursor:pointer;
+  backdrop-filter:blur(8px);
+}
+.mode-btn:hover{border-color:rgba(124,140,255,0.35);background:rgba(124,140,255,0.08);transform:translateY(-2px);}
+.mode-icon{font-size:26px;margin-bottom:8px;}
+.mode-name{font-family:var(--font-display);font-size:15px;font-weight:800;margin-bottom:4px;}
+.mode-desc{font-size:12px;color:var(--muted);}
 
-  .options { display: flex; flex-direction: column; gap: 10px; }
-  .option { background: var(--card2); border: 2px solid var(--border); border-radius: 10px; padding: 14px 18px; cursor: pointer; font-size: 14px; line-height: 1.5; transition: all .15s; display: flex; align-items: flex-start; gap: 12px; }
-  .option:hover { border-color: var(--accent); background: #1e2340; }
-  .option .opt-letter { width: 24px; height: 24px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-  .option.correct { border-color: var(--green); background: #0f2a1a; }
-  .option.correct .opt-letter { background: var(--green); color: #fff; }
-  .option.wrong { border-color: var(--red); background: #2a0f0f; }
-  .option.wrong .opt-letter { background: var(--red); color: #fff; }
-  .option.disabled { pointer-events: none; opacity: 0.6; }
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal{
+  background:rgba(14,20,48,0.95);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:28px;max-width:500px;width:100%;
+  box-shadow:0 40px 80px rgba(0,0,0,0.5);
+}
+.modal h3{font-family:var(--font-display);font-size:18px;font-weight:800;margin-bottom:20px;}
+.modal-options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.modal-option{
+  background:rgba(255,255,255,0.04);border:1.5px solid var(--border2);
+  border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;
+  display:flex;align-items:center;gap:10px;transition:all .15s;
+}
+.modal-option:hover{border-color:rgba(124,140,255,0.3);}
+.modal-option input[type=checkbox]{width:16px;height:16px;accent-color:var(--primary);}
+.modal-option.all-opt{border-style:dashed;}
+.modal-btns{display:flex;gap:10px;}
+.modal-btns button{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:700;border:none;transition:all .2s;}
+.btn-start{background:linear-gradient(135deg,var(--primary),#9f7aea);color:#fff;box-shadow:0 8px 20px rgba(124,140,255,0.25);}
+.btn-start:hover{transform:translateY(-1px);}
+.btn-cancel{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid var(--border) !important;}
 
-  .feedback-box { background: var(--card2); border-radius: 10px; padding: 16px 20px; margin-top: 16px; display: none; }
-  .feedback-box.show { display: block; }
-  .feedback-box.correct-fb { border-left: 3px solid var(--green); }
-  .feedback-box.wrong-fb { border-left: 3px solid var(--red); }
-  .feedback-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
-  .feedback-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+/* ── QUIZ ── */
+.quiz-screen{display:none;}
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.back-btn{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;
+  color:var(--text);transition:all .2s;
+}
+.back-btn:hover{border-color:var(--primary);color:var(--primary);}
+.quiz-title{font-family:var(--font-display);font-size:16px;font-weight:800;}
+.quiz-info{color:var(--muted);font-size:13px;margin-left:auto;}
+.progress-bar{background:rgba(255,255,255,0.07);height:6px;border-radius:3px;margin-bottom:24px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--primary),var(--primary2));transition:width .4s;box-shadow:0 0 12px rgba(94,234,212,0.3);}
+.question-card{
+  background:rgba(16,22,48,0.75);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:28px;margin-bottom:16px;
+  backdrop-filter:blur(16px);
+}
+.question-num{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:12px;}
+.question-text{font-family:var(--font-display);font-size:clamp(16px,2vw,20px);font-weight:800;line-height:1.4;letter-spacing:-0.03em;margin-bottom:22px;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option{
+  background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:14px 18px;cursor:pointer;font-size:14px;line-height:1.5;
+  transition:all .15s;display:flex;align-items:flex-start;gap:12px;color:var(--text);
+}
+.option:hover{border-color:rgba(124,140,255,0.35);background:rgba(124,140,255,0.08);}
+.opt-letter{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.option.correct{border-color:rgba(52,211,153,0.5);background:rgba(52,211,153,0.1);}
+.option.correct .opt-letter{background:var(--green);color:#fff;}
+.option.wrong{border-color:rgba(251,113,133,0.5);background:rgba(251,113,133,0.08);}
+.option.wrong .opt-letter{background:var(--red);color:#fff;}
+.option.disabled{pointer-events:none;opacity:0.6;}
+.feedback-box{background:rgba(94,234,212,0.06);border-radius:12px;padding:16px 18px;margin-top:14px;display:none;border-left:3px solid transparent;}
+.feedback-box.show{display:block;}
+.feedback-box.correct-fb{border-left-color:var(--green);}
+.feedback-box.wrong-fb{border-left-color:var(--red);}
+.feedback-title{font-size:13px;font-weight:700;margin-bottom:6px;}
+.feedback-text{font-size:13px;color:var(--muted);line-height:1.6;}
+.next-btn{
+  width:100%;background:linear-gradient(135deg,var(--primary),#9f7aea);
+  color:#fff;border:none;border-radius:12px;padding:14px;
+  font-size:15px;font-weight:700;display:none;margin-top:10px;
+  transition:all .2s;box-shadow:0 8px 24px rgba(124,140,255,0.2);
+}
+.next-btn:hover{transform:translateY(-1px);}
+.next-btn.show{display:block;}
 
-  .next-btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; display: none; margin-top: 12px; transition: opacity .2s; }
-  .next-btn:hover { opacity: .85; }
-  .next-btn.show { display: block; }
+/* ── RESULTS ── */
+.results-card{
+  background:rgba(16,22,48,0.8);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:36px;text-align:center;
+  backdrop-filter:blur(16px);
+}
+.results-score{font-family:var(--font-display);font-size:clamp(52px,8vw,72px);font-weight:900;letter-spacing:-0.05em;margin:12px 0 6px;}
+.results-label{color:var(--muted);font-size:14px;margin-bottom:20px;}
+.results-grade{font-family:var(--font-display);font-size:20px;font-weight:800;padding:10px 28px;border-radius:999px;display:inline-block;margin-bottom:24px;}
+.grade-a{background:rgba(52,211,153,0.12);color:var(--green);border:1.5px solid rgba(52,211,153,0.3);}
+.grade-b{background:rgba(124,140,255,0.12);color:var(--primary);border:1.5px solid rgba(124,140,255,0.3);}
+.grade-c{background:rgba(251,191,36,0.1);color:var(--gold);border:1.5px solid rgba(251,191,36,0.25);}
+.grade-d{background:rgba(251,113,133,0.1);color:var(--red);border:1.5px solid rgba(251,113,133,0.25);}
+.results-breakdown{background:rgba(255,255,255,0.04);border-radius:12px;padding:16px 20px;margin-bottom:22px;text-align:left;}
+.breakdown-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.breakdown-row:last-child{border-bottom:none;}
+.results-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.results-btns button{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.btn-retry{background:linear-gradient(135deg,var(--primary),#9f7aea);color:#fff;}
+.btn-home{background:rgba(255,255,255,0.07);color:var(--text);border:1px solid var(--border)!important;}
 
-  .results-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 36px; text-align: center; }
-  .results-score { font-size: 64px; font-weight: 900; margin: 16px 0 8px; }
-  .results-label { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
-  .results-grade { font-size: 22px; font-weight: 800; padding: 10px 28px; border-radius: 30px; display: inline-block; margin-bottom: 28px; }
-  .grade-a { background: #0f2a1a; color: var(--green); border: 2px solid var(--green); }
-  .grade-b { background: #1a2535; color: var(--accent); border: 2px solid var(--accent); }
-  .grade-c { background: #1a1a0f; color: var(--yellow); border: 2px solid var(--yellow); }
-  .grade-d { background: #2a0f0f; color: var(--red); border: 2px solid var(--red); }
-  .results-breakdown { background: var(--card2); border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; text-align: left; }
-  .breakdown-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; border-bottom: 1px solid var(--border); }
-  .breakdown-row:last-child { border-bottom: none; }
-  .results-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-  .results-btns button { flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; }
-  .btn-retry { background: var(--accent); color: #fff; }
-  .btn-home { background: var(--card2); color: var(--text); border: 1px solid var(--border) !important; }
+/* ── FLASHCARDS ── */
+.flashcard-screen{display:none;}
+.fc-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.fc-progress{color:var(--muted);font-size:13px;margin-left:auto;}
+.fc-container{perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:280px;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.fc-inner.flipped{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;border-radius:var(--radius-lg);padding:36px 32px;display:flex;flex-direction:column;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.fc-front{background:rgba(16,22,48,0.8);border:1px solid var(--border);align-items:center;text-align:center;backdrop-filter:blur(16px);}
+.fc-back{background:linear-gradient(135deg,rgba(22,36,80,0.9),rgba(14,24,58,0.95));border:1px solid rgba(94,234,212,0.25);transform:rotateY(180deg);}
+.fc-hint{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--faint);margin-bottom:14px;}
+.fc-term{font-family:var(--font-display);font-size:clamp(18px,3vw,24px);font-weight:900;line-height:1.2;letter-spacing:-0.03em;}
+.fc-def-label{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--primary2);margin-bottom:10px;}
+.fc-def{font-size:14px;line-height:1.7;color:var(--text);}
+.fc-chapter-tag{font-size:11px;color:var(--faint);margin-top:14px;}
+.fc-nav{display:flex;gap:12px;align-items:center;justify-content:center;}
+.fc-nav button,.shuffle-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text);padding:10px 22px;border-radius:999px;font-size:13px;font-weight:600;transition:all .2s;}
+.fc-nav button:hover,.shuffle-btn:hover{border-color:var(--primary);color:var(--primary);}
+.fc-count{color:var(--muted);font-size:13px;min-width:80px;text-align:center;}
 
-  .flashcard-screen { max-width: 700px; margin: 0 auto; padding: 30px 20px; display: none; }
-  .fc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-  .fc-progress { color: var(--muted); font-size: 13px; margin-left: auto; }
-  .fc-container { perspective: 1200px; cursor: pointer; margin-bottom: 20px; }
-  .fc-inner { position: relative; width: 100%; height: 280px; transform-style: preserve-3d; transition: transform .5s; }
-  .fc-inner.flipped { transform: rotateY(180deg); }
-  .fc-face { position: absolute; width: 100%; height: 100%; border-radius: 16px; padding: 36px 32px; display: flex; flex-direction: column; justify-content: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .fc-front { background: var(--card); border: 1px solid var(--border); align-items: center; text-align: center; }
-  .fc-back { background: var(--card2); border: 1px solid var(--accent); transform: rotateY(180deg); }
-  .fc-hint { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 14px; }
-  .fc-term { font-size: 20px; font-weight: 800; line-height: 1.4; }
-  .fc-def-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 10px; }
-  .fc-def { font-size: 15px; line-height: 1.7; color: var(--text); }
-  .fc-chapter-tag { font-size: 11px; color: var(--muted); margin-top: 14px; }
-  .fc-nav { display: flex; gap: 12px; align-items: center; justify-content: center; }
-  .fc-nav button { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
-  .fc-nav button:hover { border-color: var(--accent); }
-  .fc-nav .fc-count { color: var(--muted); font-size: 14px; min-width: 80px; text-align: center; }
-  .shuffle-btn { background: var(--card2) !important; font-size: 13px !important; padding: 8px 16px !important; }
+/* ── TERMS ── */
+.terms-screen{display:none;}
+.terms-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.terms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.term-card{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:14px;padding:16px 18px;}
+.term-card .t-name{font-family:var(--font-display);font-size:14px;font-weight:800;margin-bottom:6px;color:var(--primary);}
+.term-card .t-def{font-size:13px;color:var(--muted);line-height:1.5;}
+.term-card .t-ch{font-size:11px;color:var(--faint);margin-top:8px;}
 
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
-  .modal-overlay.show { display: flex; }
-  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; }
-  .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
-  .modal-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-  .modal-option { background: var(--card2); border: 2px solid var(--border); border-radius: 10px; padding: 12px 16px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 12px; }
-  .modal-option:hover { border-color: var(--accent); }
-  .modal-option input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); }
-  .modal-option.all-opt { border-style: dashed; }
-  .modal-btns { display: flex; gap: 10px; }
-  .modal-btns button { flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; }
-  .btn-start { background: var(--accent); color: #fff; }
-  .btn-cancel { background: var(--card2); color: var(--text); border: 1px solid var(--border) !important; }
+/* ── FILTER CHIPS ── */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-chip{padding:7px 16px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--muted);transition:all .2s;}
+.filter-chip.active{border-color:rgba(124,140,255,0.4);background:rgba(124,140,255,0.12);color:var(--text);}
+.filter-chip:hover{border-color:rgba(124,140,255,0.25);}
 
-  .terms-screen { max-width: 900px; margin: 0 auto; padding: 30px 20px; display: none; }
-  .terms-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-  .terms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
-  .term-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
-  .term-card .t-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--accent); }
-  .term-card .t-def { font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .term-card .t-ch { font-size: 11px; color: var(--border); margin-top: 8px; }
-  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .filter-chip { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--card2); }
-  .filter-chip.active { border-color: var(--accent); background: #1e2340; color: var(--accent); }
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .exam-info{flex-direction:column;gap:8px;}
+  .mode-row{flex-direction:column;}
+  .fc-inner{height:240px;}
+  .fc-face{padding:24px 20px;}
+}
 </style>
-</head>
-<body>
 
 <nav>
-  <div>
+  <div class="brand-mark">M</div>
+  <div class="brand-text">
     <div class="logo">MK 3010 Study App</div>
     <div class="subtitle">Kenneth Hill · All 15 Chapters</div>
   </div>
   <div class="spacer"></div>
   <div class="score-badge" id="globalScore">Total Correct: 0</div>
-  <button onclick="resetProgress()" style="background:none;border:1px solid #333;color:#555;padding:6px 12px;border-radius:8px;font-size:11px;cursor:pointer;">Reset</button>
+  <button class="reset-btn" onclick="resetProgress()">Reset</button>
 </nav>
 
 <div class="home" id="homeScreen">
@@ -328,36 +464,47 @@
       <div class="final-badge">⭐ FINAL EXAM</div>
       <div class="ch-num">Chapter 13</div>
       <div class="ch-title">Intro to IMC</div>
-      <div class="ch-count">15 questions · AIDA, Push/Pull, Adoption Curve</div>
+      <div class="ch-count">20 questions · AIDA, Push/Pull, Adoption Curve + 5 Prof Qs</div>
       <div class="ch-progress"><div class="ch-bar" id="bar13" style="width:0%"></div></div>
     </div>
     <div class="chapter-card ch15" onclick="openChapterQuiz('ch15')">
       <div class="final-badge">⭐ FINAL EXAM</div>
       <div class="ch-num">Chapter 15</div>
       <div class="ch-title">Advertising &amp; Sales Promotion</div>
-      <div class="ch-count">16 questions · Ad types, Digital, Sales Promo</div>
+      <div class="ch-count">21 questions · Ad types, Digital, Sales Promo + 5 Prof Qs</div>
       <div class="ch-progress"><div class="ch-bar" id="bar15" style="width:0%"></div></div>
     </div>
     <div class="chapter-card ch16" onclick="openChapterQuiz('ch16')">
       <div class="final-badge">⭐ FINAL EXAM</div>
       <div class="ch-num">Chapter 16</div>
       <div class="ch-title">Earned, Owned &amp; Social Media</div>
-      <div class="ch-count">15 questions · Paid/Earned/Owned, Social</div>
+      <div class="ch-count">20 questions · Paid/Earned/Owned, Sportwear + 5 Prof Qs</div>
       <div class="ch-progress"><div class="ch-bar" id="bar16" style="width:0%"></div></div>
     </div>
     <div class="chapter-card ch17" onclick="openChapterQuiz('ch17')">
       <div class="final-badge">⭐ FINAL EXAM</div>
       <div class="ch-num">Chapter 17</div>
       <div class="ch-title">Pricing Objectives &amp; Policies</div>
-      <div class="ch-count">15 questions · Objectives, Discounts, Skimming</div>
+      <div class="ch-count">20 questions · Objectives, Discounts, Skimming + 5 Prof Qs</div>
       <div class="ch-progress"><div class="ch-bar" id="bar17" style="width:0%"></div></div>
     </div>
     <div class="chapter-card ch18" onclick="openChapterQuiz('ch18')">
       <div class="final-badge">⭐ FINAL EXAM</div>
       <div class="ch-num">Chapter 18</div>
       <div class="ch-title">Price Setting in the Business World</div>
-      <div class="ch-count">15 questions · Markup, Break-even, Marginal</div>
+      <div class="ch-count">20 questions · Markup, Break-even, Marginal + 5 Prof Qs</div>
       <div class="ch-progress"><div class="ch-bar" id="bar18" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="section-label" style="margin-top:20px">🎯 Dr. Lohtia's Actual Exam Questions</div>
+  <div style="margin-bottom:20px">
+    <div class="mode-btn" onclick="startProfQuiz()" style="max-width:480px;border-color:var(--gold);background:rgba(251,191,36,0.08);">
+      <div class="mode-icon">🎯</div>
+      <div class="mode-name" style="color:var(--gold)">Professor's 25 Sample Questions</div>
+      <div class="mode-desc">The exact questions from Dr. Lohtia's sample exam — Ch 13, 15, 16, 17, 18</div>
     </div>
   </div>
 
@@ -1222,6 +1369,113 @@ const QUESTIONS = [
  opts:["$60","$80","$20","$70"],
  ans:0, exp:"Markup on cost: Selling price = Cost × (1 + markup%) = $40 × 1.50 = $60. Compare to markup on selling price: if markup on price were 50%, the selling price would be $80 ($40 ÷ 0.50). Always identify which base is being used."},
 
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 13 (5 questions) ────────────────────
+{ch:'ch13',q:"Regarding promotion methods, which of the following statements is TRUE?",
+ opts:["Personal selling can provide immediate feedback","Publicity is any paid form of nonpersonal presentation of ideas, goods, or services","Advertising is usually more tailored to individual needs than personal selling","Sales promotion activities produce results very slowly compared to advertising","Advertising is the most expensive promotion method per customer reached"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. Personal selling's KEY advantage = it can provide IMMEDIATE feedback — the salesperson adjusts on the spot. Publicity is NOT paid (that's advertising). Advertising reaches mass audiences cheaply per person. Sales promotions produce QUICK results. Personal selling is the most expensive per contact."},
+
+{ch:'ch13',q:"Which of the following ACCURATELY characterizes publicity?",
+ opts:["It is generally less useful than advertising for promoting a truly new product","It is mass selling that avoids paying media costs","It is any paid form of nonpersonal presentation of ideas, goods, or services by an identified sponsor","It is more expensive than all other promotion methods","It is more flexible than personal selling"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. Publicity = mass selling that avoids paying media costs — the firm doesn't pay for the space or time, a journalist or third party covers it. Advertising = PAID, nonpersonal, identified sponsor. Publicity has NO payment to media and NO identified sponsor control."},
+
+{ch:'ch13',q:"Which of the following would NOT be an example of sales promotion?",
+ opts:["A flyer placed on a homeowner's door announcing a new lawn service","A coupon offering a buy-one-get-one-free deal at a pizza restaurant","A free sample of a new breakfast cereal mailed to consumers","A special display of snack chips placed in a grocery store's main aisle","A contest in which a fast-food chain distributes scratch-off game pieces"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. A flyer is advertising — it's a nonpersonal, mass communication. Sales promotion = activities that STIMULATE trial or purchase: coupons, free samples, in-store displays, contests, sweepstakes. A door flyer = advertising, not promotion."},
+
+{ch:'ch13',q:"The AIDA model consists of:",
+ opts:["Awareness, Influence, Decoding, and Advertising","Attention, Interest, Desire, and Action","Appraisal, Insight, Discernment, and Action","Advertise, Influence, Desire, and Attention","Awareness, Information, Design, and Attention"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. AIDA = Attention → Interest → Desire → Action. These are the four promotion tasks a marketer must accomplish to move a customer to purchase. Every ad or sales call should advance the customer through these stages."},
+
+{ch:'ch13',q:"The GEICO slogan '15 minutes could save you 15 percent or more on your car insurance' is an example of which element of the communication process?",
+ opts:["message","source","receiver","encoder","feedback"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. The slogan IS the message — the actual content being communicated. The source = GEICO (sender). The encoder = the creative team that put it into words. The receiver = the consumer hearing/seeing it. Feedback = consumer response (clicking, calling). The slogan itself = message."},
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 15 (5 questions) ────────────────────
+{ch:'ch15',q:"Which of the following is the BEST example of a specific, measurable advertising objective?",
+ opts:["'We want 35% of our target customers to be aware of our new product within the next two months.'","'We want to generate enough interest in our product that intermediaries will be willing to stock it.'","'We want to make older consumers aware of our product—since they have the greatest need.'","'We want to increase profits—and that will require significantly expanding sales of our product.'","'We want to win an advertising industry artistic award for the creative effort on the ad.'"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. Good advertising objectives must be specific, measurable, and time-bound — and focused on COMMUNICATION tasks (awareness, attitude), not business outcomes like profit. Option A = 35% awareness, specific target audience, 2-month deadline. All others are vague, profit-focused, or not communication-specific."},
+
+{ch:'ch15',q:"Comparative ads for a product work BEST in which stage of the adoption process?",
+ opts:["awareness","interest","evaluation and trial","decision","confirmation"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Comparative advertising works best at EVALUATION AND TRIAL — when customers are actively comparing alternatives and need reasons to prefer your brand. At awareness, they just need to know you exist. At confirmation, they've already bought and need reassurance."},
+
+{ch:'ch15',q:"When a firm's president appears in TV testimonial ads to assure customers, employees, and stockholders that the firm is making a fast recovery from some problem, it is an example of:",
+ opts:["institutional advertising","reminder advertising","competitive advertising","comparative advertising","pioneering advertising"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. Institutional advertising = promotes the company's name, image, and goodwill — NOT a specific product. A CEO assuring stakeholders during a crisis = classic institutional ad. It's about rebuilding the firm's reputation, not selling a product."},
+
+{ch:'ch15',q:"Which advertising medium would be BEST for achieving the WIDEST reach?",
+ opts:["newspaper","direct mail","television","outdoor (billboards)","magazine"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Television reaches the widest audience — it combines sight, sound, and motion and can reach millions simultaneously. Direct mail is highly targeted (narrow). Magazines and newspapers are selective. Billboards have local reach. For broad reach → TV."},
+
+{ch:'ch15',q:"Which of the following sales promotion activities is aimed primarily at FINAL USERS of a product?",
+ opts:["sales contests","sales meetings","coupons","merchandising aids"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Coupons are aimed at FINAL CONSUMERS (end users). Sales contests, sales meetings, and merchandising aids are typically aimed at the sales force or channel members (retailers, wholesalers). Consumer promotions = coupons, samples, rebates, sweepstakes."},
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 16 (5 questions) ────────────────────
+{ch:'ch16',q:"An Apple customer tells a friend how much she likes her new iPhone. What type of consumer communication is this?",
+ opts:["must-buy","reminder","pass-along","pioneering","informative"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Pass-along = a customer sharing or recommending a product to others — word-of-mouth. It's a form of earned media because the brand doesn't pay for it and doesn't control it. This is one of the most trusted forms of promotion."},
+
+{ch:'ch16',q:"Sportwear, Inc. donated athletic hijabs to track athletes and the press ran a story about it. The media attention Sportwear received BEST describes:",
+ opts:["owned media","earned media","paid media","social media","user-generated content"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q (Sportwear scenario). The press running a news story about the donation = EARNED media — third parties (journalists) generating coverage the brand didn't pay for or directly control. Earned media is the most trusted type."},
+
+{ch:'ch16',q:"In the Sportwear scenario, the company's Facebook page — where it highlights publicity and promotes activewear — is an example of:",
+ opts:["owned media","earned media","paid media","broadcast media","user-generated content"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q (Sportwear scenario). The brand's own Facebook page = OWNED media — channels the company directly controls (website, email list, brand social profiles). Note: PAID ads on Facebook = paid media. The organic brand PAGE = owned media."},
+
+{ch:'ch16',q:"In the Sportwear scenario, the full-page advertisements in Sports Illustrated and Women's Fitness magazines are examples of:",
+ opts:["owned media","earned media","paid media","social media","user-generated content"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q (Sportwear scenario). Magazine ads = PAID media — the brand pays to access the channel (magazine space). High message control, potentially large reach, but consumers trust it least because they know the brand paid for it."},
+
+{ch:'ch16',q:"In the Sportwear scenario, Zara (a Muslim athlete with a large social media following) posted a picture of herself wearing Sportwear's hijab and recommended the product to her followers. This BEST describes:",
+ opts:["owned media","infographic","paid media","broadcast media","user-generated content"],
+ ans:4, exp:"⭐ DR. LOHTIA EXAM Q (Sportwear scenario). Zara's organic Instagram post = USER-GENERATED CONTENT (a form of earned media). If Sportwear had PAID Zara to post, it would be paid media (influencer marketing). Since she posted voluntarily = UGC = earned media."},
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 17 (5 questions) ────────────────────
+{ch:'ch17',q:"KeyLine, Inc. prices its LCD monitors so that it earns a 20% return on investment. Which pricing objective is KeyLine following?",
+ opts:["meet competition","unit sales growth","nonprice competition","target return","share of market"],
+ ans:3, exp:"⭐ DR. LOHTIA EXAM Q. Target return = a profit-oriented objective that sets a SPECIFIC profit goal expressed as a % of sales or ROI. KeyLine wants 20% ROI → that's a target return. It's different from 'maximize profit' — it aims for a satisfactory, specific level."},
+
+{ch:'ch17',q:"At Travelocity, visitors find multiple airlines with the IDENTICAL same-day price for a flight from Atlanta to San Francisco. What pricing objective are these airlines pursuing?",
+ opts:["status quo","price flexibility","quantity discount","introductory price deal","bundling"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. Status quo pricing = 'meet the competition / don't rock the boat.' Airlines matching each other's prices exactly = status quo. The goal is stable prices and avoiding price wars, not growing share or maximizing profit."},
+
+{ch:'ch17',q:"American Airlines allows members to accumulate 25,000 frequent flier miles and then redeem them for a free round-trip ticket. This is a:",
+ opts:["introductory price deal","F.O.B. discount","cash discount","cumulative quantity discount","bundle price discount"],
+ ans:3, exp:"⭐ DR. LOHTIA EXAM Q. Cumulative quantity discount = discount based on TOTAL purchases over a period of time. Miles accumulate across multiple flights → the reward comes after buying repeatedly over time. This encourages customer loyalty. Noncumulative quantity discount = applies to a single order only."},
+
+{ch:'ch17',q:"A buyer receives an invoice for $100 with terms '2/15 net 30.' She can expect to pay:",
+ opts:["$100 if she pays anytime in the first 30 days","less than $100 if she pays during the first 15 days","$100 if she pays anytime during the first 15 days","more than $100 if she pays between day 15 and day 30","the full $100 if she waits more than 30 days to pay"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. '2/15 net 30' = 2% cash discount if paid within 15 days; full amount due within 30 days. Paying in 15 days = $100 × 0.98 = $98 (LESS than $100). After 15 days but within 30 = full $100. After 30 days = full $100 (possibly a penalty). The 2% discount annualizes to ~36% — a major incentive."},
+
+{ch:'ch17',q:"A manufacturer's suggested retail price window sticker includes the same 'destination charge' for shipping regardless of whether the dealership is close to or far from the plant. This pricing practice is called:",
+ opts:["F.O.B. pricing","zone pricing","uniform delivered pricing","freight absorption pricing","None of these is correct"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Uniform delivered pricing = ONE price that includes delivery costs — the same everywhere, regardless of actual shipping distance. The seller absorbs the freight cost variation. F.O.B. pricing = buyer pays shipping from factory. Zone pricing = different prices in different geographic zones."},
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 18 (5 questions) ────────────────────
+{ch:'ch18',q:"A retailer buys a product for $4 and adds $2 to cover operating expenses and profit, making the selling price $6. The percentage markup on the $6 SELLING PRICE is:",
+ opts:["50 percent","33.33 percent","100 percent","20 percent","25 percent"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. Markup on SELLING PRICE = markup ÷ selling price = $2 ÷ $6 = 0.3333 = 33.33%. If it were markup on COST: $2 ÷ $4 = 50%. The base matters! The textbook convention is markup on selling price unless otherwise stated."},
+
+{ch:'ch18',q:"According to the textbook, markups are:",
+ opts:["always stated as a percentage of cost","a percentage of selling price — unless otherwise stated","never stated as a percentage of cost","should never be stated in dollar amounts","None of these is correct"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. The textbook convention: markups are expressed as a % of SELLING PRICE unless otherwise stated. This is the standard in retailing. Some manufacturers use cost as the base and will say 'markup on cost.' When no base is specified → assume selling price."},
+
+{ch:'ch18',q:"A fast-food store has fixed costs of $1,000,000. Variable cost per serving = $1.89. Selling price per serving = $2.89. How many servings must be sold to BREAK EVEN?",
+ opts:["1,000,000 servings","1,200,000 servings","2,890,000 servings","189,000 servings","This cannot be determined with the information provided"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. BEP = Fixed Costs ÷ (Price − Variable Cost) = $1,000,000 ÷ ($2.89 − $1.89) = $1,000,000 ÷ $1.00 = 1,000,000 servings. The contribution margin per serving = $1.00. Each serving covers $1 of fixed costs, so you need 1 million servings to cover $1 million in fixed costs."},
+
+{ch:'ch18',q:"The MAIN advantage that marginal analysis has over most other popular pricing methods is that it:",
+ opts:["considers both fixed and variable costs","takes into account the break-even point","allows managers to evaluate pricing alternatives","takes into account BOTH costs AND demand","incorporates the markup chain"],
+ ans:3, exp:"⭐ DR. LOHTIA EXAM Q. Marginal analysis is the ONLY pricing method that considers BOTH costs AND demand simultaneously. Average-cost pricing and break-even analysis only look at costs. Demand-backward pricing only looks at customer willingness to pay. Marginal analysis integrates both → theoretically optimal pricing."},
+
+{ch:'ch18',q:"An auto manufacturer charges more for its hybrid car than a gas-only car. It argues the consumer will SAVE money in the long run because gas savings will exceed the price difference. This manufacturer is using:",
+ opts:["price leadership","price lining","value-in-use pricing","psychological pricing","reference pricing"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Value-in-use pricing = setting price based on the ECONOMIC VALUE the product delivers to the customer over time — not just production cost. The hybrid saves fuel money → its value IN USE exceeds its purchase price differential. This justifies the higher price based on total customer savings."},
+
+
 ]; // end QUESTIONS
 // ─── FLASHCARDS ───────────────────────────────────────────────────────────────
 const FLASHCARDS = [
@@ -1456,6 +1710,18 @@ function startQuizFromModal() {
 }
 function openChapterQuiz(ch) {
   startQuiz([ch]);
+}
+function startProfQuiz() {
+  const profQs = QUESTIONS.filter(q => q.exp && q.exp.startsWith('⭐ DR. LOHTIA'));
+  const shuffled = shuffle(profQs);
+  currentQuiz = shuffled;
+  lastQuizConfig = ['ch13','ch15','ch16','ch17','ch18'];
+  currentQ = 0; correct = 0; answered = false; quizResults = [];
+  document.getElementById('quizTitle').textContent = "Dr. Lohtia's 25 Sample Questions";
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('resultsScreen').style.display = 'none';
+  renderQuestion();
 }
 
 // ─── QUIZ ────────────────────────────────────────────────────────────────────
