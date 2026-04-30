@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MK 3010 Complete Study App — Kenneth Hill</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f1e;
+  --surface: rgba(16,22,48,0.72);
+  --surface2: rgba(22,30,64,0.90);
+  --border: rgba(255,255,255,0.10);
+  --border2: rgba(255,255,255,0.06);
+  --text: #f0f3ff;
+  --muted: #8a97c4;
+  --faint: #5a6494;
+  --primary: #7c8cff;
+  --primary2: #5eead4;
+  --gold: #fbbf24;
+  --green: #34d399;
+  --red: #fb7185;
+  --yellow: #fbbf24;
+  --accent: #7c8cff;
+  --card: rgba(16,22,48,0.72);
+  --card2: rgba(22,30,64,0.88);
+  --shadow: 0 20px 60px rgba(0,0,0,0.4);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-lg: 28px;
+  --font-body: 'Satoshi', Inter, system-ui, sans-serif;
+  --font-display: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  /* chapter colors */
+  --ch1:#e11d48; --ch2:#f97316; --ch3:#eab308; --ch4:#84cc16; --ch5:#14b8a6;
+  --ch7:#6366f1; --ch8:#ec4899; --ch9:#f43f5e; --ch10:#0ea5e9; --ch12:#a855f7;
+  --ch13:#7c8cff; --ch15:#8b5cf6; --ch16:#06b6d4; --ch17:#fbbf24; --ch18:#10b981;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  font-size:15px;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 8% 12%, rgba(124,140,255,0.22) 0%, transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(94,234,212,0.14) 0%, transparent 25%),
+    radial-gradient(circle at 50% 80%, rgba(124,140,255,0.08) 0%, transparent 40%),
+    linear-gradient(180deg,#0a0f1e 0%,#0e1428 50%,#080c1a 100%);
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:40px 40px;
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
+  pointer-events:none;z-index:0;
+}
+button,input{font:inherit;cursor:pointer}
+a{color:inherit}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:14px;
+  padding:14px 24px;margin:12px auto;
+  max-width:1200px;width:calc(100% - 24px);
+  background:rgba(10,15,30,0.75);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+.brand-mark{
+  width:42px;height:42px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  box-shadow:0 8px 24px rgba(124,140,255,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:900;font-size:17px;color:#fff;
+}
+.brand-text .logo{font-family:var(--font-display);font-size:16px;font-weight:800;letter-spacing:-0.03em;}
+.brand-text .subtitle{font-size:11px;color:var(--muted);}
+.spacer{flex:1}
+.score-badge{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  padding:7px 16px;border-radius:999px;font-size:12px;font-weight:600;
+}
+.reset-btn{
+  background:none;border:1px solid rgba(255,255,255,0.1);
+  color:var(--faint);padding:7px 14px;border-radius:999px;font-size:11px;
+  transition:all .2s;
+}
+.reset-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* ── LAYOUT ── */
+.home,.quiz-screen,.flashcard-screen,.terms-screen{
+  max-width:1100px;margin:0 auto;padding:24px 12px 48px;position:relative;z-index:1;
+}
+
+/* ── HERO ── */
+.hero{text-align:center;margin-bottom:28px;}
+.hero h1{font-family:var(--font-display);font-size:clamp(26px,4vw,38px);font-weight:900;letter-spacing:-0.05em;margin-bottom:8px;}
+.hero p{color:var(--muted);font-size:14px;}
+
+/* ── EXAM INFO BAR ── */
+.exam-info{
+  display:flex;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(135deg,rgba(20,28,60,0.8),rgba(14,20,48,0.9));
+  border:1px solid rgba(124,140,255,0.2);
+  border-radius:var(--radius);padding:18px 24px;margin-bottom:24px;
+  backdrop-filter:blur(12px);
+}
+.exam-info .item{display:flex;flex-direction:column;gap:3px;min-width:100px;}
+.exam-info .label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--faint);}
+.exam-info .value{font-size:14px;font-weight:700;color:var(--primary);}
+
+/* ── DAILY PLAN ── */
+.daily-plan{
+  background:linear-gradient(135deg,rgba(12,20,50,0.85),rgba(8,14,36,0.9));
+  border:1px solid rgba(124,140,255,0.18);
+  border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:28px;
+  backdrop-filter:blur(16px);
+}
+.daily-plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.daily-plan-title{font-family:var(--font-display);font-size:17px;font-weight:800;letter-spacing:-0.03em;}
+.countdown-box{background:rgba(0,0,0,0.3);border:1px solid rgba(251,191,36,0.25);border-radius:12px;padding:8px 18px;text-align:center;}
+.countdown-num{font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--gold);line-height:1;}
+.countdown-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);}
+.day-cards{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.day-pill{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--border2);color:var(--faint);background:rgba(255,255,255,0.04);white-space:nowrap;transition:all .2s;}
+.day-pill.today{background:rgba(124,140,255,0.15);border-color:rgba(124,140,255,0.4);color:#fff;}
+.day-pill.done{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3);color:var(--green);}
+.day-pill.exam-day{background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.3);color:var(--gold);}
+.today-detail{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:16px;padding:18px 20px;}
+.today-detail h3{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--primary);margin-bottom:8px;}
+.today-goal{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+.today-chapters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.today-ch-tag{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;}
+.start-today-btn{
+  width:100%;background:linear-gradient(135deg,var(--primary),#9f7aea);
+  color:#fff;border:none;border-radius:12px;padding:13px 24px;
+  font-size:14px;font-weight:700;transition:all .2s;
+  box-shadow:0 8px 24px rgba(124,140,255,0.25);
+}
+.start-today-btn:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(124,140,255,0.35);}
+
+/* ── SECTION LABELS ── */
+.section-label{font-family:var(--font-display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:12px;}
+
+/* ── CHAPTER CARDS ── */
+.chapters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:12px;}
+.chapter-card{
+  position:relative;
+  background:linear-gradient(160deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:20px;cursor:pointer;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  overflow:hidden;
+}
+.chapter-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;}
+.chapter-card.ch1::before{background:var(--ch1);}
+.chapter-card.ch2::before{background:var(--ch2);}
+.chapter-card.ch3::before{background:var(--ch3);}
+.chapter-card.ch4::before{background:var(--ch4);}
+.chapter-card.ch5::before{background:var(--ch5);}
+.chapter-card.ch7::before{background:var(--ch7);}
+.chapter-card.ch8::before{background:var(--ch8);}
+.chapter-card.ch9::before{background:var(--ch9);}
+.chapter-card.ch10::before{background:var(--ch10);}
+.chapter-card.ch12::before{background:var(--ch12);}
+.chapter-card.ch13::before{background:var(--ch13);}
+.chapter-card.ch15::before{background:var(--ch15);}
+.chapter-card.ch16::before{background:var(--ch16);}
+.chapter-card.ch17::before{background:var(--ch17);}
+.chapter-card.ch18::before{background:var(--ch18);}
+.chapter-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.16);box-shadow:0 16px 40px rgba(0,0,0,0.3);}
+.ch-num{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--faint);margin-bottom:6px;}
+.ch-title{font-family:var(--font-display);font-size:15px;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em;}
+.ch-count{font-size:12px;color:var(--muted);}
+.ch-progress{margin-top:12px;background:rgba(255,255,255,0.07);height:4px;border-radius:2px;overflow:hidden;}
+.ch-bar{height:100%;border-radius:2px;transition:width .4s ease;}
+.ch1 .ch-bar{background:var(--ch1);}
+.ch2 .ch-bar{background:var(--ch2);}
+.ch3 .ch-bar{background:var(--ch3);}
+.ch4 .ch-bar{background:var(--ch4);}
+.ch5 .ch-bar{background:var(--ch5);}
+.ch7 .ch-bar{background:var(--ch7);}
+.ch8 .ch-bar{background:var(--ch8);}
+.ch9 .ch-bar{background:var(--ch9);}
+.ch10 .ch-bar{background:var(--ch10);}
+.ch12 .ch-bar{background:var(--ch12);}
+.ch13 .ch-bar{background:var(--ch13);}
+.ch15 .ch-bar{background:var(--ch15);}
+.ch16 .ch-bar{background:var(--ch16);}
+.ch17 .ch-bar{background:var(--ch17);}
+.ch18 .ch-bar{background:var(--ch18);}
+.final-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 10px;border-radius:999px;margin-bottom:8px;
+  background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);
+  color:var(--gold);font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+}
+
+/* ── MODE BUTTONS ── */
+.mode-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;}
+.mode-btn{
+  flex:1;min-width:180px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);padding:20px;
+  text-align:center;transition:all .2s;cursor:pointer;
+  backdrop-filter:blur(8px);
+}
+.mode-btn:hover{border-color:rgba(124,140,255,0.35);background:rgba(124,140,255,0.08);transform:translateY(-2px);}
+.mode-icon{font-size:26px;margin-bottom:8px;}
+.mode-name{font-family:var(--font-display);font-size:15px;font-weight:800;margin-bottom:4px;}
+.mode-desc{font-size:12px;color:var(--muted);}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal{
+  background:rgba(14,20,48,0.95);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:28px;max-width:500px;width:100%;
+  box-shadow:0 40px 80px rgba(0,0,0,0.5);
+}
+.modal h3{font-family:var(--font-display);font-size:18px;font-weight:800;margin-bottom:20px;}
+.modal-options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.modal-option{
+  background:rgba(255,255,255,0.04);border:1.5px solid var(--border2);
+  border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;
+  display:flex;align-items:center;gap:10px;transition:all .15s;
+}
+.modal-option:hover{border-color:rgba(124,140,255,0.3);}
+.modal-option input[type=checkbox]{width:16px;height:16px;accent-color:var(--primary);}
+.modal-option.all-opt{border-style:dashed;}
+.modal-btns{display:flex;gap:10px;}
+.modal-btns button{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:700;border:none;transition:all .2s;}
+.btn-start{background:linear-gradient(135deg,var(--primary),#9f7aea);color:#fff;box-shadow:0 8px 20px rgba(124,140,255,0.25);}
+.btn-start:hover{transform:translateY(-1px);}
+.btn-cancel{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid var(--border) !important;}
+
+/* ── QUIZ ── */
+.quiz-screen{display:none;}
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.back-btn{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;
+  color:var(--text);transition:all .2s;
+}
+.back-btn:hover{border-color:var(--primary);color:var(--primary);}
+.quiz-title{font-family:var(--font-display);font-size:16px;font-weight:800;}
+.quiz-info{color:var(--muted);font-size:13px;margin-left:auto;}
+.progress-bar{background:rgba(255,255,255,0.07);height:6px;border-radius:3px;margin-bottom:24px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--primary),var(--primary2));transition:width .4s;box-shadow:0 0 12px rgba(94,234,212,0.3);}
+.question-card{
+  background:rgba(16,22,48,0.75);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:28px;margin-bottom:16px;
+  backdrop-filter:blur(16px);
+}
+.question-num{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:12px;}
+.question-text{font-family:var(--font-display);font-size:clamp(16px,2vw,20px);font-weight:800;line-height:1.4;letter-spacing:-0.03em;margin-bottom:22px;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option{
+  background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:14px 18px;cursor:pointer;font-size:14px;line-height:1.5;
+  transition:all .15s;display:flex;align-items:flex-start;gap:12px;color:var(--text);
+}
+.option:hover{border-color:rgba(124,140,255,0.35);background:rgba(124,140,255,0.08);}
+.opt-letter{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.option.correct{border-color:rgba(52,211,153,0.5);background:rgba(52,211,153,0.1);}
+.option.correct .opt-letter{background:var(--green);color:#fff;}
+.option.wrong{border-color:rgba(251,113,133,0.5);background:rgba(251,113,133,0.08);}
+.option.wrong .opt-letter{background:var(--red);color:#fff;}
+.option.disabled{pointer-events:none;opacity:0.6;}
+.feedback-box{background:rgba(94,234,212,0.06);border-radius:12px;padding:16px 18px;margin-top:14px;display:none;border-left:3px solid transparent;}
+.feedback-box.show{display:block;}
+.feedback-box.correct-fb{border-left-color:var(--green);}
+.feedback-box.wrong-fb{border-left-color:var(--red);}
+.feedback-title{font-size:13px;font-weight:700;margin-bottom:6px;}
+.feedback-text{font-size:13px;color:var(--muted);line-height:1.6;}
+.next-btn{
+  width:100%;background:linear-gradient(135deg,var(--primary),#9f7aea);
+  color:#fff;border:none;border-radius:12px;padding:14px;
+  font-size:15px;font-weight:700;display:none;margin-top:10px;
+  transition:all .2s;box-shadow:0 8px 24px rgba(124,140,255,0.2);
+}
+.next-btn:hover{transform:translateY(-1px);}
+.next-btn.show{display:block;}
+
+/* ── RESULTS ── */
+.results-card{
+  background:rgba(16,22,48,0.8);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:36px;text-align:center;
+  backdrop-filter:blur(16px);
+}
+.results-score{font-family:var(--font-display);font-size:clamp(52px,8vw,72px);font-weight:900;letter-spacing:-0.05em;margin:12px 0 6px;}
+.results-label{color:var(--muted);font-size:14px;margin-bottom:20px;}
+.results-grade{font-family:var(--font-display);font-size:20px;font-weight:800;padding:10px 28px;border-radius:999px;display:inline-block;margin-bottom:24px;}
+.grade-a{background:rgba(52,211,153,0.12);color:var(--green);border:1.5px solid rgba(52,211,153,0.3);}
+.grade-b{background:rgba(124,140,255,0.12);color:var(--primary);border:1.5px solid rgba(124,140,255,0.3);}
+.grade-c{background:rgba(251,191,36,0.1);color:var(--gold);border:1.5px solid rgba(251,191,36,0.25);}
+.grade-d{background:rgba(251,113,133,0.1);color:var(--red);border:1.5px solid rgba(251,113,133,0.25);}
+.results-breakdown{background:rgba(255,255,255,0.04);border-radius:12px;padding:16px 20px;margin-bottom:22px;text-align:left;}
+.breakdown-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.breakdown-row:last-child{border-bottom:none;}
+.results-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.results-btns button{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.btn-retry{background:linear-gradient(135deg,var(--primary),#9f7aea);color:#fff;}
+.btn-home{background:rgba(255,255,255,0.07);color:var(--text);border:1px solid var(--border)!important;}
+
+/* ── FLASHCARDS ── */
+.flashcard-screen{display:none;}
+.fc-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.fc-progress{color:var(--muted);font-size:13px;margin-left:auto;}
+.fc-container{perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:280px;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.fc-inner.flipped{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;border-radius:var(--radius-lg);padding:36px 32px;display:flex;flex-direction:column;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.fc-front{background:rgba(16,22,48,0.8);border:1px solid var(--border);align-items:center;text-align:center;backdrop-filter:blur(16px);}
+.fc-back{background:linear-gradient(135deg,rgba(22,36,80,0.9),rgba(14,24,58,0.95));border:1px solid rgba(94,234,212,0.25);transform:rotateY(180deg);}
+.fc-hint{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--faint);margin-bottom:14px;}
+.fc-term{font-family:var(--font-display);font-size:clamp(18px,3vw,24px);font-weight:900;line-height:1.2;letter-spacing:-0.03em;}
+.fc-def-label{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--primary2);margin-bottom:10px;}
+.fc-def{font-size:14px;line-height:1.7;color:var(--text);}
+.fc-chapter-tag{font-size:11px;color:var(--faint);margin-top:14px;}
+.fc-nav{display:flex;gap:12px;align-items:center;justify-content:center;}
+.fc-nav button,.shuffle-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text);padding:10px 22px;border-radius:999px;font-size:13px;font-weight:600;transition:all .2s;}
+.fc-nav button:hover,.shuffle-btn:hover{border-color:var(--primary);color:var(--primary);}
+.fc-count{color:var(--muted);font-size:13px;min-width:80px;text-align:center;}
+
+/* ── TERMS ── */
+.terms-screen{display:none;}
+.terms-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.terms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.term-card{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:14px;padding:16px 18px;}
+.term-card .t-name{font-family:var(--font-display);font-size:14px;font-weight:800;margin-bottom:6px;color:var(--primary);}
+.term-card .t-def{font-size:13px;color:var(--muted);line-height:1.5;}
+.term-card .t-ch{font-size:11px;color:var(--faint);margin-top:8px;}
+
+/* ── FILTER CHIPS ── */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-chip{padding:7px 16px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--muted);transition:all .2s;}
+.filter-chip.active{border-color:rgba(124,140,255,0.4);background:rgba(124,140,255,0.12);color:var(--text);}
+.filter-chip:hover{border-color:rgba(124,140,255,0.25);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .exam-info{flex-direction:column;gap:8px;}
+  .mode-row{flex-direction:column;}
+  .fc-inner{height:240px;}
+  .fc-face{padding:24px 20px;}
+}
+</style>
+
+<nav>
+  <div class="brand-mark">M</div>
+  <div class="brand-text">
+    <div class="logo">MK 3010 Study App</div>
+    <div class="subtitle">Kenneth Hill · All 15 Chapters</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="score-badge" id="globalScore">Total Correct: 0</div>
+  <button class="reset-btn" onclick="resetProgress()">Reset</button>
+</nav>
+
+<div class="home" id="homeScreen">
+  <div class="hero">
+    <h1>🎯 MK 3010 Complete Study App</h1>
+    <p>All 15 chapters · 176 practice questions · 100 flashcards</p>
+  </div>
+
+  <div class="exam-info">
+    <div class="item"><div class="label">Final Exam</div><div class="value">May 1, 2026</div></div>
+    <div class="item"><div class="label">Taking It</div><div class="value">Friday · 7–9 PM</div></div>
+    <div class="item"><div class="label">Format</div><div class="value">50 MC · 75 min</div></div>
+    <div class="item"><div class="label">Final Exam Chapters</div><div class="value">13, 15, 16, 17, 18</div></div>
+    <div class="item"><div class="label">Worth</div><div class="value">16 pts (16% of grade)</div></div>
+  </div>
+
+  <!-- DAILY PLAN -->
+  <div class="daily-plan">
+    <div class="daily-plan-header">
+      <div class="daily-plan-title">📅 Study Plan — 5 Days to Exam</div>
+      <div class="countdown-box">
+        <div class="countdown-num" id="countdownNum">—</div>
+        <div class="countdown-label" id="countdownLabel">until exam</div>
+      </div>
+    </div>
+    <div class="day-cards" id="dayPills"></div>
+    <div class="today-detail" id="todayDetail"></div>
+  </div>
+
+  <div class="section-label">Course Chapters</div>
+  <div class="chapters-grid">
+    <div class="chapter-card ch1" onclick="openChapterQuiz('ch1')">
+      <div class="ch-num">Chapter 1</div>
+      <div class="ch-title">Marketing's Value</div>
+      <div class="ch-count">10 questions · Marketing concept, Macro/Micro</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar1" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch2" onclick="openChapterQuiz('ch2')">
+      <div class="ch-num">Chapter 2</div>
+      <div class="ch-title">Marketing Strategy Planning</div>
+      <div class="ch-count">10 questions · 4Ps, Target Market, CLV</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar2" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch3" onclick="openChapterQuiz('ch3')">
+      <div class="ch-num">Chapter 3</div>
+      <div class="ch-title">Market Environment</div>
+      <div class="ch-count">10 questions · Competition, PEST, Advantage</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar3" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch4" onclick="openChapterQuiz('ch4')">
+      <div class="ch-num">Chapter 4</div>
+      <div class="ch-title">Segmentation &amp; Positioning</div>
+      <div class="ch-count">10 questions · Segmenting, Targeting, Positioning</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar4" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch5" onclick="openChapterQuiz('ch5')">
+      <div class="ch-num">Chapter 5</div>
+      <div class="ch-title">Consumer Behavior</div>
+      <div class="ch-count">10 questions · PSSP, Attitudes, Problem-solving</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar5" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch7" onclick="openChapterQuiz('ch7')">
+      <div class="ch-num">Chapter 7</div>
+      <div class="ch-title">Marketing Research</div>
+      <div class="ch-count">10 questions · MIS, Primary/Secondary, Big Data</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar7" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch8" onclick="openChapterQuiz('ch8')">
+      <div class="ch-num">Chapter 8</div>
+      <div class="ch-title">Product Planning</div>
+      <div class="ch-count">10 questions · Product classes, Branding, Warranty</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar8" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch9" onclick="openChapterQuiz('ch9')">
+      <div class="ch-num">Chapter 9</div>
+      <div class="ch-title">Product Life Cycle</div>
+      <div class="ch-count">10 questions · PLC stages, Innovation, New products</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar9" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch10" onclick="openChapterQuiz('ch10')">
+      <div class="ch-num">Chapter 10</div>
+      <div class="ch-title">Place / Channels</div>
+      <div class="ch-count">10 questions · Channels, Distribution intensity, VMS</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar10" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch12" onclick="openChapterQuiz('ch12')">
+      <div class="ch-num">Chapter 12</div>
+      <div class="ch-title">Retailers &amp; Wholesalers</div>
+      <div class="ch-count">10 questions · Retail types, Wheel of retailing</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar12" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:20px">⭐ Final Exam Chapters (May 1)</div>
+  <div class="chapters-grid">
+    <div class="chapter-card ch13" onclick="openChapterQuiz('ch13')">
+      <div class="final-badge">⭐ FINAL EXAM</div>
+      <div class="ch-num">Chapter 13</div>
+      <div class="ch-title">Intro to IMC</div>
+      <div class="ch-count">20 questions · AIDA, Push/Pull, Adoption Curve + 5 Prof Qs</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar13" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch15" onclick="openChapterQuiz('ch15')">
+      <div class="final-badge">⭐ FINAL EXAM</div>
+      <div class="ch-num">Chapter 15</div>
+      <div class="ch-title">Advertising &amp; Sales Promotion</div>
+      <div class="ch-count">21 questions · Ad types, Digital, Sales Promo + 5 Prof Qs</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar15" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch16" onclick="openChapterQuiz('ch16')">
+      <div class="final-badge">⭐ FINAL EXAM</div>
+      <div class="ch-num">Chapter 16</div>
+      <div class="ch-title">Earned, Owned &amp; Social Media</div>
+      <div class="ch-count">20 questions · Paid/Earned/Owned, Sportwear + 5 Prof Qs</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar16" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch17" onclick="openChapterQuiz('ch17')">
+      <div class="final-badge">⭐ FINAL EXAM</div>
+      <div class="ch-num">Chapter 17</div>
+      <div class="ch-title">Pricing Objectives &amp; Policies</div>
+      <div class="ch-count">20 questions · Objectives, Discounts, Skimming + 5 Prof Qs</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar17" style="width:0%"></div></div>
+    </div>
+    <div class="chapter-card ch18" onclick="openChapterQuiz('ch18')">
+      <div class="final-badge">⭐ FINAL EXAM</div>
+      <div class="ch-num">Chapter 18</div>
+      <div class="ch-title">Price Setting in the Business World</div>
+      <div class="ch-count">20 questions · Markup, Break-even, Marginal + 5 Prof Qs</div>
+      <div class="ch-progress"><div class="ch-bar" id="bar18" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="section-label" style="margin-top:20px">🎯 Dr. Lohtia's Actual Exam Questions</div>
+  <div style="margin-bottom:20px">
+    <div class="mode-btn" onclick="startProfQuiz()" style="max-width:480px;border-color:var(--gold);background:rgba(251,191,36,0.08);">
+      <div class="mode-icon">🎯</div>
+      <div class="mode-name" style="color:var(--gold)">Professor's 25 Sample Questions</div>
+      <div class="mode-desc">The exact questions from Dr. Lohtia's sample exam — Ch 13, 15, 16, 17, 18</div>
+    </div>
+  </div>
+
+  <div class="mode-row">
+    <div class="mode-btn" onclick="openModal('quiz')">
+      <div class="mode-icon">📝</div>
+      <div class="mode-name">Full Practice Quiz</div>
+      <div class="mode-desc">Choose chapters · Timed · Scored</div>
+    </div>
+    <div class="mode-btn" onclick="showFlashcards()">
+      <div class="mode-icon">🃏</div>
+      <div class="mode-name">Flashcards</div>
+      <div class="mode-desc">100 key terms — tap to flip</div>
+    </div>
+    <div class="mode-btn" onclick="showTerms()">
+      <div class="mode-icon">📖</div>
+      <div class="mode-name">Key Terms</div>
+      <div class="mode-desc">Quick-reference glossary</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>Select Chapters to Quiz</h3>
+    <div class="modal-options">
+      <label class="modal-option all-opt">
+        <input type="checkbox" id="chkAll" onchange="toggleAll(this)"> All Chapters (176 questions)
+      </label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch1"> Ch 1 — Marketing's Value</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch2"> Ch 2 — Marketing Strategy Planning</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch3"> Ch 3 — Market Environment</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch4"> Ch 4 — Segmentation &amp; Positioning</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch5"> Ch 5 — Consumer Behavior</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch7"> Ch 7 — Marketing Research</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch8"> Ch 8 — Product Planning</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch9"> Ch 9 — Product Life Cycle</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch10"> Ch 10 — Place / Channels</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch12"> Ch 12 — Retailers &amp; Wholesalers</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch13" checked> Ch 13 — IMC ⭐</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch15" checked> Ch 15 — Advertising &amp; Sales Promotion ⭐</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch16" checked> Ch 16 — Earned, Owned &amp; Social Media ⭐</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch17" checked> Ch 17 — Pricing Objectives &amp; Policies ⭐</label>
+      <label class="modal-option"><input type="checkbox" class="chk-ch" value="ch18" checked> Ch 18 — Price Setting ⭐</label>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-start" onclick="startQuizFromModal()">Start Quiz →</button>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-screen" id="quizScreen">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goHome()">← Home</button>
+    <div class="quiz-title" id="quizTitle">Quiz</div>
+    <div class="quiz-info" id="quizInfo"></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="question-card">
+    <div class="question-num" id="questionNum"></div>
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="optionsContainer"></div>
+    <div class="feedback-box" id="feedbackBox">
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div class="feedback-text" id="feedbackText"></div>
+    </div>
+  </div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+</div>
+
+<div class="quiz-screen" id="resultsScreen" style="display:none">
+  <div class="results-card">
+    <div style="font-size:48px;margin-bottom:8px">🎯</div>
+    <h2 style="font-size:22px;margin-bottom:16px">Quiz Complete!</h2>
+    <div class="results-score" id="resultsScore">0/0</div>
+    <div class="results-label" id="resultsLabel"></div>
+    <div class="results-grade" id="resultsGrade"></div>
+    <div class="results-breakdown" id="resultsBreakdown"></div>
+    <div class="results-btns">
+      <button class="btn-retry" onclick="retryQuiz()">Retry Same Quiz</button>
+      <button class="btn-home" onclick="markDayDoneAndGoHome()">✓ Done — Home</button>
+    </div>
+  </div>
+</div>
+
+<div class="flashcard-screen" id="flashcardScreen">
+  <div class="fc-header">
+    <button class="back-btn" onclick="goHome()">← Home</button>
+    <div style="font-size:16px;font-weight:700">Flashcards</div>
+    <div class="fc-progress" id="fcProgress"></div>
+  </div>
+  <div class="filter-row" id="fcFilter"></div>
+  <div class="fc-container" onclick="flipCard()">
+    <div class="fc-inner" id="fcInner">
+      <div class="fc-face fc-front">
+        <div class="fc-hint">TAP TO FLIP</div>
+        <div class="fc-term" id="fcTerm"></div>
+      </div>
+      <div class="fc-face fc-back">
+        <div class="fc-def-label">DEFINITION</div>
+        <div class="fc-def" id="fcDef"></div>
+        <div class="fc-chapter-tag" id="fcChTag"></div>
+      </div>
+    </div>
+  </div>
+  <div class="fc-nav">
+    <button onclick="fcNav(-1)">← Prev</button>
+    <div class="fc-count" id="fcCount"></div>
+    <button onclick="fcNav(1)">Next →</button>
+  </div>
+  <div style="text-align:center;margin-top:12px">
+    <button class="back-btn shuffle-btn" onclick="shuffleCards()">🔀 Shuffle</button>
+  </div>
+</div>
+
+<div class="terms-screen" id="termsScreen">
+  <div class="terms-header">
+    <button class="back-btn" onclick="goHome()">← Home</button>
+    <div style="font-size:16px;font-weight:700">Key Terms Glossary</div>
+  </div>
+  <div class="filter-row" id="termsFilter"></div>
+  <div class="terms-grid" id="termsGrid"></div>
+</div>
+
+<script>
+const CHAPTERS = {
+  ch1:  { label: 'Ch 1',  title: "Marketing's Value",           color: '#e11d48' },
+  ch2:  { label: 'Ch 2',  title: 'Marketing Strategy Planning', color: '#f97316' },
+  ch3:  { label: 'Ch 3',  title: 'Market Environment',          color: '#eab308' },
+  ch4:  { label: 'Ch 4',  title: 'Segmentation & Positioning',  color: '#84cc16' },
+  ch5:  { label: 'Ch 5',  title: 'Consumer Behavior',           color: '#14b8a6' },
+  ch7:  { label: 'Ch 7',  title: 'Marketing Research',          color: '#6366f1' },
+  ch8:  { label: 'Ch 8',  title: 'Product Planning',            color: '#ec4899' },
+  ch9:  { label: 'Ch 9',  title: 'Product Life Cycle',          color: '#f43f5e' },
+  ch10: { label: 'Ch 10', title: 'Place / Channels',            color: '#0ea5e9' },
+  ch12: { label: 'Ch 12', title: 'Retailers & Wholesalers',     color: '#a855f7' },
+  ch13: { label: 'Ch 13', title: 'Intro to IMC',                color: '#3b82f6' },
+  ch15: { label: 'Ch 15', title: 'Advertising & Sales Promo',   color: '#8b5cf6' },
+  ch16: { label: 'Ch 16', title: 'Earned, Owned & Social',      color: '#06b6d4' },
+  ch17: { label: 'Ch 17', title: 'Pricing Objectives & Policies',color: '#f59e0b' },
+  ch18: { label: 'Ch 18', title: 'Price Setting',               color: '#10b981' },
+};
+
+const QUESTIONS = [
+// ─── CHAPTER 1 — Marketing's Value ───────────────────────────────────────────
+{ch:'ch1',q:"According to the textbook, marketing is best defined as:",
+ opts:["Advertising and selling products to as many people as possible","The performance of activities that seek to accomplish an organization's objectives by anticipating customer needs and directing the flow of goods and services to satisfy those needs","Producing quality products and letting customers find them","Maximizing profits through efficient production"],
+ ans:1, exp:"Marketing = the performance of activities that anticipate customer needs and direct the flow of goods/services to satisfy them at a profit. It's broader than just selling or advertising."},
+
+{ch:'ch1',q:"The 'marketing concept' means a firm should:",
+ opts:["Focus on producing the best product possible regardless of customer demand","Aim all of its efforts at satisfying customers — at a profit","Maximize sales volume regardless of profitability","Advertise heavily to create demand for whatever it produces"],
+ ans:1, exp:"The marketing concept = aim ALL of the firm's efforts at satisfying customers — at a profit. The key words are 'all efforts' (the whole firm, not just the marketing department) and 'at a profit' (not charity)."},
+
+{ch:'ch1',q:"Macro-marketing is best described as:",
+ opts:["Marketing activities of a single firm aimed at satisfying its customers","A social process that directs an economy's flow of goods and services to satisfy the needs of consumers in a society","The use of large-scale advertising campaigns by big corporations","Marketing strategies used in large countries or international markets"],
+ ans:1, exp:"Macro-marketing = a social process that directs an economy's flow of goods and services from producers to consumers in a way that effectively matches supply and demand. It looks at the whole system, not one firm."},
+
+{ch:'ch1',q:"Which of the following is NOT one of the eight universal functions of marketing?",
+ opts:["Transporting","Financing","Manufacturing","Risk taking"],
+ ans:2, exp:"The 8 universal functions: buying, selling, transporting, storing, standardizing/grading, financing, risk taking, and market information. Manufacturing is a production function, not a marketing function."},
+
+{ch:'ch1',q:"A production-oriented firm believes:",
+ opts:["Customers should drive what the firm produces","A good product will sell itself — the key job is to produce efficiently","The firm must constantly research changing customer needs","Marketing and production must work together to satisfy customers"],
+ ans:1, exp:"Production orientation = 'if we build it, they will come.' The firm focuses on making the product efficiently, assuming the product will sell itself. Marketing orientation = start with customer needs, then build products to satisfy them."},
+
+{ch:'ch1',q:"Micro-marketing differs from macro-marketing in that micro-marketing:",
+ opts:["Studies the flow of goods through the whole economy","Focuses on the marketing activities of an individual firm or organization","Looks at marketing's impact on society as a whole","Examines international marketing systems"],
+ ans:1, exp:"Micro-marketing = activities of a single firm (how Starbucks markets its coffee). Macro-marketing = the larger social process directing economic flows across the whole system."},
+
+{ch:'ch1',q:"Which of the following best illustrates the 'storing' function of marketing?",
+ opts:["A retailer runs a sale on seasonal items","A grain elevator holds wheat after harvest until mills need it","A distributor delivers goods to a retailer","A wholesaler buys 1,000 units at a discount"],
+ ans:1, exp:"Storing = holding products until customers want them. A grain elevator stores wheat between harvest (oversupply) and when mills process it (demand). This bridges the time gap between production and consumption."},
+
+{ch:'ch1',q:"The 'risk-taking' function of marketing refers to:",
+ opts:["Taking physical risks in transporting dangerous goods","Bearing the uncertainties of buying and holding inventory that may not sell","Running risky advertising campaigns","Entering new markets without sufficient research"],
+ ans:1, exp:"Risk-taking = bearing the uncertainty of market conditions. When a retailer buys inventory, it takes the risk that customers may not buy it. Marketers manage risk through research, planning, and pricing strategies."},
+
+{ch:'ch1',q:"When a firm uses the 'market information' function of marketing, it is:",
+ opts:["Advertising to inform customers about products","Gathering, analyzing, and distributing information needed to plan and carry out marketing activities","Labeling products to inform consumers about ingredients","Publishing annual reports for investors"],
+ ans:1, exp:"Market information function = gathering and analyzing data about customers, competition, and trends to make better marketing decisions. This is what market research does — it's a core universal function."},
+
+{ch:'ch1',q:"Marketing orientation is different from production orientation primarily because marketing orientation:",
+ opts:["Focuses only on the product's manufacturing quality","Starts with identifying customer needs and then develops products to satisfy those needs profitably","Emphasizes reducing costs to increase production efficiency","Relies on advertising rather than product quality"],
+ ans:1, exp:"Marketing orientation starts with the customer: 'What do customers need? How can we satisfy those needs profitably?' Production orientation starts with the factory: 'What can we make? Now let's sell it.' This is a fundamental shift in business philosophy."},
+
+// ─── CHAPTER 2 — Marketing Strategy Planning ─────────────────────────────────
+{ch:'ch2',q:"A marketing strategy consists of:",
+ opts:["A promotion plan and a sales budget","A target market and a related marketing mix","The 4 Ps only, with no specific customer group defined","An advertising campaign and a distribution plan"],
+ ans:1, exp:"Marketing strategy = (1) a target market + (2) a marketing mix (4 Ps) designed for that market. You can't have a strategy without knowing who you're targeting."},
+
+{ch:'ch2',q:"Which of the following is NOT one of the 4 Ps of the marketing mix?",
+ opts:["Product","People","Price","Promotion"],
+ ans:1, exp:"The 4 Ps = Product, Place, Promotion, Price. 'People' is NOT a P — the target market is the customer group you aim at, but it is not a controllable variable in the marketing mix itself."},
+
+{ch:'ch2',q:"A 'target market' is defined as:",
+ opts:["Every possible customer who might buy a product","A fairly homogeneous group of customers to whom the firm wishes to appeal","The geographic area where the firm sells most of its products","The segment of the market that generates the most revenue"],
+ ans:1, exp:"Target market = a fairly homogeneous (similar) group of customers the firm wants to appeal to with its marketing mix. 'Fairly homogeneous' is key — members have similar needs so one mix can serve them all well."},
+
+{ch:'ch2',q:"Customer lifetime value (CLV) is best described as:",
+ opts:["The amount a customer spends in a single transaction","The total profit a firm expects to earn from a customer over the entire relationship","The cost of acquiring a new customer","The number of years a customer remains loyal to a brand"],
+ ans:1, exp:"CLV = the total profit a firm expects from a customer over the entire relationship. High CLV customers justify greater marketing investment. CLV focuses attention on long-term relationships, not just single transactions."},
+
+{ch:'ch2',q:"'Customer equity' refers to:",
+ opts:["The brand value of a single product","The total lifetime value of all of a firm's customers combined","The dollar amount a customer invests in the firm's stock","The equity customers build through loyalty reward programs"],
+ ans:1, exp:"Customer equity = the sum of the lifetime values of ALL the firm's customers. A firm's customer equity is essentially the financial value of its customer base — a key strategic asset."},
+
+{ch:'ch2',q:"The marketing management process involves which three key activities?",
+ opts:["Research, Advertise, Sell","Plan, Implement, Control","Produce, Price, Promote","Segment, Target, Position"],
+ ans:1, exp:"The marketing management process = Plan (develop strategy) → Implement (put the plan into action) → Control (measure results and adjust). This cycle repeats continuously."},
+
+{ch:'ch2',q:"A production-oriented view of a firm's market would define the market as:",
+ opts:["All people who need the type of satisfaction the firm's product offers","What the firm makes — e.g., 'we are in the steel business'","All customers with similar demographic characteristics","Anyone willing to pay the firm's asking price"],
+ ans:1, exp:"Production-oriented managers define their market by what they make ('we make steel'). Marketing-oriented managers define it by what customers need ('we help customers build things'). This distinction prevents marketing myopia."},
+
+{ch:'ch2',q:"Which of the following is an example of a 'Place' decision in the marketing mix?",
+ opts:["Setting a $49.99 price point for a software subscription","Deciding to sell through Amazon rather than a physical store","Creating a TV commercial for a new product","Adding a new feature to a product based on customer feedback"],
+ ans:1, exp:"Place = how and where you make the product available to the target market. Choosing to sell through Amazon vs. a physical store is a channel (Place) decision. Price, Promotion, and Product are the other Ps."},
+
+{ch:'ch2',q:"Which statement correctly distinguishes a 'generic market' from a 'product-market'?",
+ opts:["A generic market includes only one type of product; a product-market includes many","A generic market has customers with similar needs that different product types can satisfy; a product-market narrows this to customers seeking the same type of product","A generic market targets a broader age range; a product-market targets a narrow demographic","A generic market is global; a product-market is local"],
+ ans:1, exp:"Generic market = customers with similar needs who might be satisfied by different product types (e.g., 'people who want entertainment' — books, TV, video games all compete). Product-market = narrows to one product type (e.g., 'people who want streaming video')."},
+
+{ch:'ch2',q:"In marketing strategy planning, what is the role of 'control'?",
+ opts:["Setting prices to control competitor reactions","Measuring results against objectives and adjusting the plan when needed","Controlling the advertising message to avoid FTC violations","Managing the supply chain to control inventory levels"],
+ ans:1, exp:"Control = the third step of the management process. You compare actual results to planned objectives, identify gaps, and adjust your strategy or implementation. Without control, you can't improve or fix problems."},
+
+// ─── CHAPTER 3 — Market Environment ──────────────────────────────────────────
+{ch:'ch3',q:"In 'pure competition,' which of the following is true?",
+ opts:["A few large sellers dominate the market","Many sellers offer essentially the same (homogeneous) product","Many sellers offer differentiated products","One seller controls the entire market"],
+ ans:1, exp:"Pure competition = many sellers, homogeneous (identical) products, easy entry/exit. No single firm has pricing power — prices are set by the market. Examples: commodity markets like wheat or corn."},
+
+{ch:'ch3',q:"An 'oligopoly' market structure is characterized by:",
+ opts:["One seller controlling the entire market","Many sellers with differentiated products competing on brand","A few large sellers whose pricing decisions affect each other","Many sellers of identical products with no market power"],
+ ans:2, exp:"Oligopoly = few sellers (e.g., major airlines, automakers, wireless carriers). Each seller's pricing affects the others, so they watch competitors closely. Price wars are common, and collusion is illegal but tempting."},
+
+{ch:'ch3',q:"In 'monopolistic competition,' what allows sellers to have some pricing power?",
+ opts:["The small number of sellers in the market","Product differentiation — each seller's product is slightly different from competitors'","Government regulation that limits competition","Exclusive patents that prevent other firms from entering"],
+ ans:1, exp:"Monopolistic competition = many sellers, but each has a slightly differentiated product (brand, features, service). Differentiation gives each seller a small 'monopoly' over its own unique offering — hence the name."},
+
+{ch:'ch3',q:"A 'competitive advantage' is best defined as:",
+ opts:["Having the lowest price in the market","A firm advantage in terms of cost, quality, or other factor that enables it to serve customers better or more profitably than competitors","Owning patents that prevent competition","Being the first brand to enter a new market"],
+ ans:1, exp:"Competitive advantage = a firm's ability to serve customers in a way competitors cannot easily match. It could be lower cost, better quality, superior service, stronger brand, or unique technology. It's what makes customers choose you."},
+
+{ch:'ch3',q:"The PEST framework in marketing refers to which four environmental factors?",
+ opts:["Product, Economy, Sales, Technology","Political/Legal, Economic, Social/Cultural, Technological","Pricing, Efficiency, Segmentation, Targeting","Promotion, Environment, Strategy, Tactics"],
+ ans:1, exp:"PEST = Political/Legal, Economic, Technological, Social/Cultural environments. These are uncontrollable external forces that marketers must monitor and adapt to. They constrain what strategies are possible."},
+
+{ch:'ch3',q:"A 'sustainable competitive advantage' differs from a regular competitive advantage because it:",
+ opts:["Is based only on having the lowest price in the market","Is difficult for competitors to copy or erode over time","Lasts exactly five years by definition","Depends only on technological innovations"],
+ ans:1, exp:"Sustainable competitive advantage = an edge that competitors cannot quickly or easily duplicate. Examples: proprietary technology, strong brand loyalty, unique supplier relationships, or scale economies. Advantages based only on price are rarely sustainable."},
+
+{ch:'ch3',q:"Which competitive situation faces a firm that is the ONLY seller of a product with no close substitutes?",
+ opts:["Pure competition","Oligopoly","Monopolistic competition","Monopoly"],
+ ans:3, exp:"Monopoly = one seller, no close substitutes. The seller has significant pricing power. Examples: local utilities, patented drugs. Monopolies are often regulated by government to protect consumers."},
+
+{ch:'ch3',q:"An example of a 'political/legal' environmental factor that a marketer must monitor is:",
+ opts:["A new competitor entering the market","A change in consumer attitudes toward sustainability","New FDA regulations on food labeling","A technological advance in mobile payment systems"],
+ ans:2, exp:"Political/legal factors = laws, regulations, court decisions, and government policies. FDA labeling regulations directly affect what products can say and how they must be packaged. Marketers must comply or risk penalties."},
+
+{ch:'ch3',q:"When the economy enters a recession, marketers typically respond by:",
+ opts:["Increasing prices to offset lower volume","Emphasizing value, cutting costs, or repositioning products as affordable options","Launching premium product lines to appeal to luxury seekers","Ignoring the change because marketing decisions are long-term"],
+ ans:1, exp:"Economic environment changes affect consumer spending power. In recessions, consumers become more price-sensitive, so marketers often emphasize value, introduce lower-cost options, or reposition products to stress affordability."},
+
+{ch:'ch3',q:"The textbook says a firm's 'resources and objectives' are part of its:",
+ opts:["External uncontrollable environment","Internal controllable environment — strengths and weaknesses","PEST analysis","Competitive advantage framework"],
+ ans:1, exp:"A firm's resources (financial, human, production capacity) and objectives (profit, growth, survival) are internal factors the firm controls. They define what strategies are feasible. External factors (competition, economy) are uncontrollable."},
+
+// ─── CHAPTER 4 — Segmentation & Positioning ──────────────────────────────────
+{ch:'ch4',q:"Market segmentation is defined as:",
+ opts:["Selling a single product to all possible customers","Dividing a market into groups of customers with similar needs so that a firm can target each group with a different marketing mix","Identifying the single best customer for a product","Setting different prices for different customer groups"],
+ ans:1, exp:"Market segmentation = dividing a heterogeneous market into smaller, more homogeneous groups. Each segment has similar needs, so you can design a more relevant marketing mix for each one."},
+
+{ch:'ch4',q:"Which of the following is a DEMOGRAPHIC segmenting dimension?",
+ opts:["Geographic region","Personality type","Age, income, or occupation","Rate of product usage"],
+ ans:2, exp:"Demographic dimensions = measurable population characteristics: age, income, gender, occupation, education, family size, ethnicity. They're widely used because they're easy to measure and often correlate with needs and buying behavior."},
+
+{ch:'ch4',q:"'Psychographic' segmentation divides customers based on:",
+ opts:["Where they live or their climate zone","Their age, gender, and income","Their lifestyle, values, and personality characteristics","How frequently they purchase the product"],
+ ans:2, exp:"Psychographic dimensions = lifestyle, values, personality, and attitudes. Examples: outdoor enthusiasts, health-conscious consumers, status seekers. Psychographics go deeper than demographics to understand why people buy."},
+
+{ch:'ch4',q:"'Behavioral' segmentation divides customers based on:",
+ opts:["Their geographic location","Their income and occupation","How they USE the product — usage rate, loyalty, benefits sought","Their age and family life stage"],
+ ans:2, exp:"Behavioral dimensions = how customers interact with the product: usage rate (heavy/light users), brand loyalty, benefits sought, user status (first-time, regular, lapsed). Very actionable for marketing decisions."},
+
+{ch:'ch4',q:"Positioning refers to:",
+ opts:["Where a firm places its products on store shelves","How a firm sets prices relative to competitors","How customers see a product or brand relative to competitors — the place it occupies in their minds","The geographic markets a firm chooses to enter"],
+ ans:2, exp:"Positioning = the image of a product in the minds of target customers relative to competitors. Volvo = safety. BMW = driving performance. Apple = sleek/innovative. Positioning is about perception, not just physical attributes."},
+
+{ch:'ch4',q:"A 'generic market' is characterized by:",
+ opts:["Customers seeking one specific type of product","Customers with similar basic needs that could be satisfied by different types of products","A single dominant brand that most customers prefer","A market with no competition"],
+ ans:1, exp:"Generic market = customers have similar needs, but very different product types could satisfy them. 'People who want to relax' could use books, TV, exercise, or massage. A product-market narrows this to one type of solution."},
+
+{ch:'ch4',q:"'Target marketing' differs from 'mass marketing' because target marketing:",
+ opts:["Always costs more in total spending","Develops specific marketing mixes aimed at one or more specific segments rather than treating the whole market as one","Is only used by small companies","Ignores differences between customer groups"],
+ ans:1, exp:"Mass marketing = one marketing mix for everyone (Henry Ford's 'any color as long as it's black'). Target marketing = identify distinct segments and design specific mixes for each target. Target marketing is more efficient and effective."},
+
+{ch:'ch4',q:"Which segmentation approach divides markets by region, city size, or population density?",
+ opts:["Demographic segmentation","Psychographic segmentation","Geographic segmentation","Behavioral segmentation"],
+ ans:2, exp:"Geographic segmentation = dividing by location: region (South, Northeast), city size (urban, suburban, rural), climate, or population density. Campbell's Soup makes spicier products for Southwest markets — a geographic segmentation decision."},
+
+{ch:'ch4',q:"'Differentiation' in a competitive context means:",
+ opts:["Lowering price to stand out from competitors","Making a product or brand distinct from competitors in a way that target customers value","Targeting different customer segments in different countries","Offering a wider product line than competitors"],
+ ans:1, exp:"Differentiation = creating meaningful differences between your offering and competitors' that target customers care about. You can differentiate on product features, service quality, brand image, or customer experience."},
+
+{ch:'ch4',q:"A 'product-market' definition is more useful for marketing strategy planning than a broad 'generic market' because:",
+ opts:["It is larger and therefore offers more opportunity","It clearly identifies who the specific customers and competing products are, making it easier to design a relevant marketing mix","It requires less research to define","It automatically identifies the right price to charge"],
+ ans:1, exp:"A product-market definition ('women 25–40 seeking affordable running shoes') gives you clear competitors, clear customer needs, and a clear target. A generic market ('people who want exercise') is too broad to develop a focused strategy."},
+
+// ─── CHAPTER 5 — Consumer Behavior ───────────────────────────────────────────
+{ch:'ch5',q:"The PSSP hierarchy of needs (as used in the textbook) lists needs in this order from most basic to highest:",
+ opts:["Social → Safety → Physiological → Personal","Physiological → Safety/Security → Social/Belonging → Personal/Self-actualization","Personal → Social → Safety → Physiological","Safety → Physiological → Personal → Social"],
+ ans:1, exp:"PSSP = Physiological (food, water, sleep) → Safety/Security (stability, protection) → Social/Belonging (love, friendship) → Personal/Self-actualization (esteem, growth). Lower needs must be reasonably satisfied before higher ones motivate behavior."},
+
+{ch:'ch5',q:"'Routine response behavior' (routinized response) in consumer buying is characterized by:",
+ opts:["Extensive search and evaluation of many brands before purchasing","Little thought or effort — the consumer buys by habit with minimal decision-making","A moderate amount of information seeking for an unfamiliar purchase","Significant involvement because the purchase is risky or expensive"],
+ ans:1, exp:"Routinized response behavior = low-involvement, habitual buying. The consumer has experience with the product class and brand, so they buy on autopilot. Example: grabbing your usual brand of toothpaste without comparison shopping."},
+
+{ch:'ch5',q:"A consumer who is buying a car for the first time and extensively researches options is engaged in:",
+ opts:["Routinized response behavior","Limited problem solving","Extensive problem solving","Impulse buying"],
+ ans:2, exp:"Extensive problem solving = high involvement, new or complex purchase, lots of information searching and alternative evaluation. First-time car buyers, selecting a college, or buying a home all involve extensive problem solving."},
+
+{ch:'ch5',q:"In consumer behavior, 'learning' occurs when:",
+ opts:["A consumer reads an advertisement and remembers it","A person's response to a stimulus changes as a result of experience","A firm trains its salespeople about product features","A consumer forms an attitude toward a brand they haven't tried"],
+ ans:1, exp:"Learning = a change in a person's thought processes or behavior caused by experience. If you try a product and love it (positive experience), you learn to buy it again. Reinforcement strengthens the learning; bad experiences extinguish the behavior."},
+
+{ch:'ch5',q:"An 'attitude' in consumer behavior is best defined as:",
+ opts:["A consumer's emotional reaction to an advertisement","A person's point of view toward something — an evaluation or feeling, positive or negative","The social class a consumer belongs to","A consumer's awareness of a brand"],
+ ans:1, exp:"Attitude = a person's point of view or predisposition toward something. Attitudes have cognitive (beliefs), affective (feelings), and behavioral (intention) components. They're relatively stable and hard to change, which is why 'attitude change' advertising is difficult."},
+
+{ch:'ch5',q:"Which type of psychological influence involves the process by which a person selects, organizes, and interprets information from the outside world?",
+ opts:["Motivation","Learning","Perception","Attitude formation"],
+ ans:2, exp:"Perception = how we select and interpret sensory inputs to create a meaningful picture of the world. Two people see the same ad differently based on selective exposure, selective attention, and selective retention — all perceptual processes."},
+
+{ch:'ch5',q:"'Reference groups' influence consumer behavior because:",
+ opts:["They provide price comparison information","Consumers look to them for guidance on what to buy, use, or value — wanting to belong or be respected by the group","They are groups of consumers with identical demographics","They represent the average consumer in a target market"],
+ ans:1, exp:"Reference groups = groups whose values or behavior a consumer looks to as a guide. Family, friends, coworkers, celebrities, and online communities are reference groups. Marketers use reference groups in endorsements and testimonials."},
+
+{ch:'ch5',q:"Social class as an influence on consumer behavior is significant because:",
+ opts:["People in the same social class always have identical incomes","Social class affects product preferences, shopping patterns, and what brands are seen as appropriate","Social class is the most important segmentation variable in all markets","People in lower social classes spend more on luxury goods"],
+ ans:1, exp:"Social class = a relatively permanent and ordered division in society. It correlates with income, education, and occupation. People in similar social classes tend to share values and consumption patterns, making it a useful segmentation variable."},
+
+{ch:'ch5',q:"'Limited problem solving' occurs when a consumer:",
+ opts:["Has never bought in the product category before and does extensive research","Buys by habit with no evaluation of alternatives","Is somewhat familiar with the product class but seeks some information before choosing among a few alternatives","Makes a major purchase requiring months of research"],
+ ans:2, exp:"Limited problem solving = mid-level involvement. The consumer knows the product class but wants to compare a few alternatives before buying. Example: choosing a new laptop brand when you're familiar with laptops but haven't tried this brand."},
+
+{ch:'ch5',q:"Culture influences consumer behavior primarily by:",
+ opts:["Determining the exact products each consumer will buy","Shaping the values, beliefs, and norms that guide what behaviors and purchases are considered acceptable or desirable","Providing discounts on products that fit cultural preferences","Creating loyalty programs that reward culturally preferred brands"],
+ ans:1, exp:"Culture = the learned values, beliefs, language, symbols, and norms shared by a society. It defines what is normal, desirable, or taboo. Marketers must understand culture to avoid missteps and to position products in culturally resonant ways."},
+
+// ─── CHAPTER 7 — Marketing Research ──────────────────────────────────────────
+{ch:'ch7',q:"A Marketing Information System (MIS) is best described as:",
+ opts:["A database of customer purchase histories","An organized way of continually gathering, accessing, and analyzing information that marketing managers need to make decisions","A software platform for managing advertising campaigns","A system for tracking competitor prices in real time"],
+ ans:1, exp:"MIS = an organized, ongoing system for gathering, accessing, and analyzing marketing information. It's broader than a one-time survey — it continuously feeds decision-makers with relevant data. It includes internal records, marketing intelligence, and research."},
+
+{ch:'ch7',q:"What is the FIRST step in the five-step scientific method for marketing research?",
+ opts:["Collect primary data through surveys","Analyze the situation and review existing information","Clearly define the problem or question to be studied","Interpret the data and draw conclusions"],
+ ans:2, exp:"Step 1 = Define the problem clearly. A poorly defined problem leads to irrelevant research. The 5 steps are: (1) Define problem, (2) Analyze situation, (3) Get problem-specific data, (4) Interpret data, (5) Solve the problem."},
+
+{ch:'ch7',q:"'Primary data' in marketing research refers to:",
+ opts:["Data that is most important to the decision","New data collected specifically for the current research problem","Information previously gathered for some other purpose","Data from government census records"],
+ ans:1, exp:"Primary data = new data collected for the specific research problem at hand. Methods include observation, surveys, and experiments. It's more relevant and current but more expensive and time-consuming than secondary data."},
+
+{ch:'ch7',q:"'Secondary data' has which of the following characteristics?",
+ opts:["It is always more accurate than primary data","It was already collected for some other purpose and may or may not fit the current research problem","It can only be gathered through in-person interviews","It is more expensive to collect than primary data"],
+ ans:1, exp:"Secondary data = already collected for another purpose (government reports, industry studies, company records). It's faster and cheaper than primary data, but may not perfectly fit your specific question, may be outdated, or may be of unknown quality."},
+
+{ch:'ch7',q:"'Big Data' in marketing is characterized by the '4 Vs.' Which option correctly lists all four?",
+ opts:["Value, Vision, Volume, Velocity","Volume, Variety, Velocity, Veracity","Visual, Verbal, Volume, Value","Volume, Value, Visibility, Variety"],
+ ans:1, exp:"Big Data 4 Vs: Volume (enormous amounts of data), Variety (many types — structured, unstructured, social media), Velocity (data generated and processed at high speed), Veracity (accuracy/trustworthiness of the data). All four create opportunities and challenges for marketers."},
+
+{ch:'ch7',q:"A 'hypothesis' in marketing research is:",
+ opts:["The final conclusion of a research study","An educated guess about a relationship between variables that the research will test","A type of survey question with a yes/no answer","A government regulation about data privacy"],
+ ans:1, exp:"Hypothesis = a tentative statement about a relationship between variables that the researcher intends to test. Example: 'Consumers who see our new packaging will rate quality higher than those who see the old packaging.' Research either supports or rejects it."},
+
+{ch:'ch7',q:"Which type of primary research method observes customer behavior without asking questions?",
+ opts:["Survey research","Experimental research","Observation research","Focus group research"],
+ ans:2, exp:"Observation research = watching and recording actual behavior. Examples: counting foot traffic, tracking eye movements on a webpage, using mystery shoppers. It avoids the bias of self-reported survey data but can't reveal reasons for behavior."},
+
+{ch:'ch7',q:"'Experimental research' in marketing is used primarily to:",
+ opts:["Survey large numbers of customers about their preferences","Observe customers in their natural environment without interference","Test cause-and-effect relationships by controlling variables","Analyze secondary data from government sources"],
+ ans:2, exp:"Experimental research = manipulating one variable (e.g., price, package design) while holding others constant to measure its effect on another variable (e.g., sales, preference). It establishes cause-and-effect — not just correlation."},
+
+{ch:'ch7',q:"When a researcher uses a focus group, this is an example of:",
+ opts:["Quantitative primary research","Qualitative primary research","Secondary data collection","Observational research"],
+ ans:1, exp:"Focus groups = qualitative research. A small group (6–12 people) discusses a topic in depth. Qualitative research explores 'why' and 'how' — generating insights, hypotheses, and rich understanding. It's NOT statistically representative."},
+
+{ch:'ch7',q:"The 'analyze situation' step of the research process involves:",
+ opts:["Designing a survey questionnaire","Reviewing secondary data and talking to informed people to understand the problem context before collecting primary data","Running statistical tests on primary data","Presenting findings to management"],
+ ans:1, exp:"Analyzing the situation = doing informal fact-finding before committing to primary research. Review existing data, talk to salespeople and customers, read industry reports. This step often reveals that secondary data already answers the question — saving time and money."},
+
+// ─── CHAPTER 8 — Product Planning ────────────────────────────────────────────
+{ch:'ch8',q:"'Convenience products' are best characterized by:",
+ opts:["High prices and infrequent purchase requiring extensive shopping","Low prices and frequent purchase with minimal shopping effort","High brand loyalty and special purchase trips to specific stores","Products consumers are unaware of or don't actively seek"],
+ ans:1, exp:"Convenience products = bought frequently, immediately, with minimal effort. Examples: bread, toothpaste, newspapers. Three types: staples (regular purchases), impulse (unplanned), emergency (urgent need). Distribution must be intensive — available everywhere."},
+
+{ch:'ch8',q:"A consumer who shops around and compares brands before buying a sofa is buying a:",
+ opts:["Convenience product","Shopping product","Specialty product","Unsought product"],
+ ans:1, exp:"Shopping products = consumers compare alternatives on price, quality, and style before buying. Two types: homogeneous (brand doesn't matter much, price drives choice — e.g., appliances) and heterogeneous (brand and style matter — e.g., furniture, clothing)."},
+
+{ch:'ch8',q:"A 'specialty product' is one that:",
+ opts:["Is sold in specialty stores only","Consumers make a special effort to find because they have strong brand preference — and will not accept substitutes","Is produced in limited quantities to create exclusivity","Has unique physical characteristics unlike any competing product"],
+ ans:1, exp:"Specialty products = consumers KNOW what they want and are willing to search for it. They won't accept substitutes. Examples: specific luxury brands, a particular doctor. Distribution can be very selective because loyal buyers will seek the product out."},
+
+{ch:'ch8',q:"'Unsought products' are products that:",
+ opts:["Are too expensive for most consumers","Consumers do not yet know about or know they need, or do not want to think about buying","Are sold only through specialty channels","Have no close substitutes in the market"],
+ ans:1, exp:"Unsought products = consumers don't actively look for them. New-unsought: genuinely new innovations customers don't know about yet. Regularly-unsought: products consumers don't want to think about — life insurance, funeral services. Require aggressive promotion."},
+
+{ch:'ch8',q:"A 'brand' in marketing is defined as:",
+ opts:["Only the logo or visual identity of a company","A name, term, symbol, or combination used to identify a seller's goods/services and differentiate them from competitors","The product's physical packaging and label","A trademark registered with the government"],
+ ans:1, exp:"Brand = a name, term, symbol, design, or combination that identifies a seller's product and distinguishes it from competitors. A brand is broader than just a logo — it includes the entire identity and associations customers have with it."},
+
+{ch:'ch8',q:"Using a 'family brand' (umbrella brand) means:",
+ opts:["Creating a unique brand name for each individual product","Using the same brand name for several related products — letting one brand's reputation cover the whole line","Licensing a well-known brand name from another company","Branding products differently in each international market"],
+ ans:1, exp:"Family brand = one brand name covers multiple products. Example: Campbell's soup (many varieties). Advantage: new products benefit from established brand reputation. Risk: one product failure can hurt the whole brand."},
+
+{ch:'ch8',q:"A 'product line' is best defined as:",
+ opts:["All the products a company sells","A group of closely related products offered by one seller that are similar in use or characteristics","Products sold under the same brand name internationally","A firm's complete product assortment across all categories"],
+ ans:1, exp:"Product line = a closely related group of products. Apple's iPhone line is one product line; Mac is another. A firm's product assortment includes ALL the product lines it sells. Managing each line's breadth and depth is a key strategic decision."},
+
+{ch:'ch8',q:"A 'warranty' in product planning serves which purpose?",
+ opts:["A legal document that transfers ownership from seller to buyer","A guarantee that a product will perform as expected, giving buyers confidence and reducing purchase risk","A sales promotion tool offering a discount on the next purchase","A certificate confirming a product meets government safety standards"],
+ ans:1, exp:"Warranty = a guarantee of product quality and performance. It reduces buyer risk (especially for expensive or complex products) and builds buyer confidence. Express warranties are written; implied warranties are created by law even without written documentation."},
+
+{ch:'ch8',q:"'Installations' as a business product category refers to:",
+ opts:["Software programs that must be installed on computers","Major capital items such as buildings, land, and large equipment that are long-lasting and expensive","Office supplies used in daily business operations","Raw materials that become part of a finished product"],
+ ans:1, exp:"Installations = major, expensive, long-lived capital items: buildings, heavy machinery, land. They require top management involvement in the buying decision, specialized salespeople, and direct channels. Leasing installations is common."},
+
+{ch:'ch8',q:"A 'licensed brand' is one where:",
+ opts:["A firm creates a new brand and licenses it to franchisees","A firm pays for the right to use someone else's well-known brand name or character on its products","The government licenses the brand name as an official standard","A retailer creates a private-label product"],
+ ans:1, exp:"Licensed brand = a firm pays a royalty to use an established brand name or character. Examples: Disney characters on children's products, NFL team logos on apparel. The licensee benefits from brand recognition; the licensor earns royalties."},
+
+// ─── CHAPTER 9 — Product Life Cycle ──────────────────────────────────────────
+{ch:'ch9',q:"During the INTRODUCTION stage of the product life cycle, typical characteristics include:",
+ opts:["High competition, falling prices, and peak profitability","Low or no profit, high marketing costs, and the main goal of informing customers about the new product","Heavy use of reminder advertising and minimal new investment","Declining sales, reduced promotion, and product phase-out planning"],
+ ans:1, exp:"Introduction = sales are low, costs are high, profits are negative or minimal. The focus is on informing target customers that the new product exists. Few competitors yet. Distribution may be limited while production is scaled up."},
+
+{ch:'ch9',q:"During the GROWTH stage of the product life cycle:",
+ opts:["Sales slow and profits are nearly zero","Sales rise rapidly, competition enters the market, and profits peak then begin to fall","The market is saturated and firms fight for share with reminder ads","Firms begin to cut the product line and reduce promotion"],
+ ans:1, exp:"Growth = rapid sales increase, new competitors enter attracted by profits, profits peak early in this stage then decline as competition intensifies. Distribution expands. Marketing emphasis shifts from informing to persuading buyers to prefer your brand."},
+
+{ch:'ch9',q:"In market MATURITY, the promotional emphasis typically shifts to:",
+ opts:["Pioneering / informing ads to introduce the product","Reminder and persuasive ads to retain loyal customers and compete for market share","No promotion — the product is well-established and doesn't need it","Direct-to-consumer sampling to drive first trial"],
+ ans:1, exp:"Maturity = most customers know the product. The fight is for brand share. Reminder ads keep loyal customers; persuasive/comparative ads try to win competitors' customers. Promotion spending stays high but the return diminishes."},
+
+{ch:'ch9',q:"During the DECLINE stage of the product life cycle, a marketer typically should:",
+ opts:["Launch an aggressive promotional campaign to reverse declining sales","Invest heavily in product innovation to extend the life cycle","Cut promotion and distribution costs, and plan for eventual phase-out","Raise prices to maximize profit before exit"],
+ ans:2, exp:"Decline = sales and profits fall steadily. The right strategy is usually to harvest (cut costs, milk remaining sales) or phase out the product. Pouring more promotion dollars into a declining product is rarely profitable."},
+
+{ch:'ch9',q:"Which of the following is NOT one of the five characteristics of an innovation that affect its rate of adoption?",
+ opts:["Relative advantage","Trialability","Brand equity","Observability"],
+ ans:2, exp:"The 5 adoption characteristics: (1) Relative advantage (is it better than what exists?), (2) Compatibility (fits current values/habits?), (3) Complexity (hard to understand?), (4) Trialability (can you try it before buying?), (5) Observability (can others see you using it?). Brand equity is not one of them."},
+
+{ch:'ch9',q:"'Relative advantage' as a characteristic of innovation means:",
+ opts:["The product is cheaper than all existing alternatives","The degree to which an innovation is perceived as better than the idea it replaces","The innovation is easier to use than competitors' products","The product has unique visual design features"],
+ ans:1, exp:"Relative advantage = how much better the new product is perceived to be vs. the existing solution. Higher perceived relative advantage → faster adoption rate. Example: smartphones had massive relative advantage over feature phones."},
+
+{ch:'ch9',q:"A 'fad' in the context of product life cycles is characterized by:",
+ opts:["A long, stable sales history with gradual decline","A sudden surge in popularity followed by a rapid decline — short-lived fashion","A product style that recurs periodically over many years","A classic product that remains popular generation after generation"],
+ ans:1, exp:"Fad = a rapid rise and rapid fall. Very short life cycle. Examples: fidget spinners, pet rocks. Fads differ from fashions (which recur in cycles) and styles (which are basic, enduring forms that come in and out of fashion)."},
+
+{ch:'ch9',q:"The product life cycle concept is most accurately applied to:",
+ opts:["Individual brand names (e.g., Coke)","Product categories or forms (e.g., carbonated soft drinks)","Individual SKUs and flavor varieties","A company's entire product assortment"],
+ ans:1, exp:"The PLC applies to product categories or forms, not individual brands. 'Smartphones' as a category has a life cycle. An individual brand like iPhone may grow while the category matures, or survive a declining category through innovation."},
+
+{ch:'ch9',q:"'Compatibility' as a characteristic of innovation refers to:",
+ opts:["Whether the product works with existing technology infrastructure","The degree to which an innovation fits with the potential adopter's existing values, past experiences, and needs","Whether the product is compatible with competitor products","The ease with which the product can be learned and used"],
+ ans:1, exp:"Compatibility = how well the innovation fits with what adopters already know, value, and do. An innovation requiring radical lifestyle change adopts more slowly. Electric cars faced compatibility challenges (charging infrastructure, range anxiety) that slowed adoption."},
+
+{ch:'ch9',q:"The new product development process typically begins with:",
+ opts:["Test marketing","Idea generation (screening for new product ideas)","Commercial launch","Product specification and engineering"],
+ ans:1, exp:"New product development process: (1) Idea generation, (2) Idea screening, (3) Idea evaluation (concept testing), (4) Development (prototypes), (5) Test marketing, (6) Commercialization. You must generate many ideas because most are screened out before reaching launch."},
+
+// ─── CHAPTER 10 — Place / Channels ───────────────────────────────────────────
+{ch:'ch10',q:"A 'channel of distribution' is defined as:",
+ opts:["The physical route that products travel from factory to consumer","Any series of firms or individuals who participate in the flow of products from producer to final user","Only the retailers and wholesalers who sell a product","The transportation network used to ship products"],
+ ans:1, exp:"Channel of distribution = any series of firms or individuals who help move a product from producer to final user. This includes manufacturers, wholesalers, retailers, and any agents or brokers who facilitate the exchange."},
+
+{ch:'ch10',q:"Which of the following is an example of a DIRECT channel of distribution?",
+ opts:["A manufacturer sells to wholesalers who sell to retailers who sell to consumers","A farmer sells produce directly at a farmers' market","A producer uses a broker to sell to retailers","A manufacturer sells to a distributor who ships to retailers"],
+ ans:1, exp:"Direct channel = producer sells directly to final users — no intermediaries. Examples: GEICO (sells insurance online/by phone directly), Dell (custom computers sold direct), farm-to-table farmers' markets. It gives the producer maximum control over the customer experience."},
+
+{ch:'ch10',q:"'Intensive distribution' is the best strategy for which type of product?",
+ opts:["Specialty products like Rolex watches","Shopping products requiring comparison","Convenience products like chewing gum or soft drinks","Business installations requiring expert service"],
+ ans:2, exp:"Intensive distribution = sell in as many outlets as possible. Best for convenience products that customers want to buy immediately wherever they are. Colgate toothpaste, Coca-Cola, and Frito-Lay chips all use intensive distribution."},
+
+{ch:'ch10',q:"'Exclusive distribution' means the producer:",
+ opts:["Sells only through company-owned stores","Limits distribution to a small number of carefully chosen dealers, often just one per geographic area","Excludes all intermediaries and sells direct to consumers","Uses only online channels to the exclusion of physical retail"],
+ ans:1, exp:"Exclusive distribution = one or very few outlets per area. Used for specialty and prestige products (Rolex, high-end car brands). Creates dealer loyalty, better service, and protects brand image. Buyers are willing to make a special trip."},
+
+{ch:'ch10',q:"'Selective distribution' involves:",
+ opts:["Selling through as many outlets as possible","Selling through a limited number of outlets that meet the producer's standards — more than exclusive, fewer than intensive","Allowing only one retailer per country to sell the product","Using online channels to select specific customers to receive the product"],
+ ans:1, exp:"Selective distribution = more outlets than exclusive, fewer than intensive. Used for shopping products (appliances, clothing, electronics). The producer can maintain some control over service quality and brand image while reaching more customers than exclusive distribution allows."},
+
+{ch:'ch10',q:"'Discrepancy of quantity' explains why intermediaries are needed because:",
+ opts:["Producers make products in large quantities but consumers want to buy in small quantities","Producers make one type of product but consumers want many types","Products are made in one location but consumers are spread across many locations","Producers want high prices but consumers want low prices"],
+ ans:0, exp:"Discrepancy of quantity = producers make large quantities efficiently; consumers buy small quantities. A cereal factory makes millions of boxes; you buy 1–2 at a time. Intermediaries 'break bulk' — they buy in large quantities from producers and sell smaller amounts to consumers."},
+
+{ch:'ch10',q:"'Discrepancy of assortment' explains why intermediaries are valuable because:",
+ opts:["Producers want to sell quickly but consumers want to delay payment","Producers specialize in narrow product lines, but consumers want a wide assortment","Producers are located far from consumers geographically","Producers and consumers have different quality expectations"],
+ ans:1, exp:"Discrepancy of assortment = producers specialize (one factory makes just cereal); consumers want variety (bread, cereal, milk, juice — all in one trip). Retailers solve this by assembling broad assortments from many different producers."},
+
+{ch:'ch10',q:"A 'vertical marketing system' (VMS) is best described as:",
+ opts:["A distribution channel with many levels of intermediaries between producer and consumer","A channel system in which all members act as a unified system, with one member owning, franchising, or coordinating the others","A system where vertical integration eliminates all retailers","A channel where producers sell vertically to government agencies"],
+ ans:1, exp:"VMS = channel members work as a unified system. Types: corporate VMS (one firm owns multiple channel levels), contractual VMS (franchise systems), administered VMS (a dominant channel leader coordinates members). Better coordination, lower costs, and more consistent customer experience."},
+
+{ch:'ch10',q:"Why might a producer choose an INDIRECT channel over a direct channel?",
+ opts:["To have more control over how the product is presented to customers","Because intermediaries can reach customers more efficiently and provide specialized distribution functions the producer can't do as cheaply on its own","To eliminate the discrepancy of assortment problem","To avoid paying advertising costs"],
+ ans:1, exp:"Indirect channels use intermediaries because they often reach customers more efficiently. A small candy manufacturer can't afford to deliver to every gas station and grocery store in the country — but a distributor can. Intermediaries reduce the number of transactions needed."},
+
+{ch:'ch10',q:"A company that sells its products through Amazon, its own website, AND physical retail stores is using:",
+ opts:["Exclusive distribution","A single-channel strategy","A multichannel distribution system","A vertical marketing system"],
+ ans:2, exp:"Multichannel distribution = using more than one channel simultaneously to reach customers. Many companies now use both physical retail, their own e-commerce site, and third-party platforms like Amazon to maximize reach and convenience."},
+
+// ─── CHAPTER 12 — Retailers & Wholesalers ─────────────────────────────────────
+{ch:'ch12',q:"A 'retailer' is a business that:",
+ opts:["Sells primarily to other businesses or wholesalers","Sells directly to final consumers for their personal, non-business use","Manufactures products and sells them to intermediaries","Provides transportation and storage services in the supply chain"],
+ ans:1, exp:"Retailer = sells to final consumers for personal, non-business use. This is the defining characteristic. Walmart, Target, Amazon, and your local grocery store are retailers. Retailers are the last link in the channel before the consumer."},
+
+{ch:'ch12',q:"A 'wholesaler' differs from a retailer primarily because a wholesaler:",
+ opts:["Sells products at higher prices","Sells to other businesses (retailers, manufacturers, institutions) rather than to final consumers","Owns no physical inventory","Operates only in business-to-business markets for professional services"],
+ ans:1, exp:"Wholesaler = sells to other businesses (retailers, manufacturers, governments) NOT to final consumers for personal use. A restaurant supply company sells to restaurants (wholesale) even though the restaurant might sell directly to consumers (retail)."},
+
+{ch:'ch12',q:"The 'wheel of retailing' concept describes which pattern in retail evolution?",
+ opts:["Retailers gradually move from physical stores to online channels over time","New retailers enter as low-price, low-service operations, then gradually upgrade their offerings and prices, eventually making room for new low-price entrants","Retailers expand their product lines to fill every wheel of the market","Retail profits revolve in a predictable cycle tied to the economy"],
+ ans:1, exp:"Wheel of retailing = retailers enter as low-cost, low-price, low-service operators (think early discount stores). As they mature, they upgrade facilities and service, raise prices, and become vulnerable to a new wave of low-cost entrants. Amazon entered as low-cost online; now traditional retailers fight back online."},
+
+{ch:'ch12',q:"'Scrambled merchandising' in retailing means:",
+ opts:["Mixing up product displays randomly to encourage browsing","Adding product lines not traditionally carried by that type of store to increase store traffic and profit","Selling products at random prices without a clear pricing strategy","Combining two different store formats in one location"],
+ ans:1, exp:"Scrambled merchandising = retailers carry product lines outside their traditional category. Pharmacies sell greeting cards and cosmetics. Gas stations sell snacks and coffee. The goal is to increase customer traffic and profit per square foot."},
+
+{ch:'ch12',q:"A 'drop-shipper' wholesaler is distinctive because it:",
+ opts:["Delivers products door-to-door using its own trucks","Takes orders from customers and passes them to producers who ship directly — the drop-shipper never physically handles the product","Specializes in dropping excess inventory at deep discounts","Provides customers with product samples before orders are placed"],
+ ans:1, exp:"Drop-shipper = owns the goods (takes title) but never physically handles them — passes orders directly to the producer who ships to the customer. Common in bulk commodities (coal, lumber). Low overhead because no warehouse or trucks needed."},
+
+{ch:'ch12',q:"Which type of retailer is BEST described as offering very low prices with a wide variety of products including groceries, clothing, and electronics all in one store?",
+ opts:["Conventional limited-line store","Specialty shop","Mass merchandiser (discount house)","Convenience store"],
+ ans:2, exp:"Mass merchandisers / discount houses = large stores with wide variety and low prices. Walmart and Target are the defining examples. They compete on price and one-stop shopping convenience, not service or specialty expertise."},
+
+{ch:'ch12',q:"A 'truck jobber' (truck wholesaler) is characterized by:",
+ opts:["A wholesaler that uses a central warehouse and ships by truck to customers","A small wholesaler that delivers limited perishable or semi-perishable products directly from its truck — often visiting retailers frequently","A retailer that sells products from a truck at temporary locations","A carrier that provides only transportation services, not wholesaling"],
+ ans:1, exp:"Truck jobbers = small wholesalers that carry limited, often perishable products (snacks, dairy, produce) on trucks and make frequent direct deliveries to retailers. They provide fresh product and immediate availability without requiring the retailer to carry large inventories."},
+
+{ch:'ch12',q:"An 'agent' or 'broker' in wholesaling differs from a merchant wholesaler because an agent/broker:",
+ opts:["Owns the goods it sells and warehouses them","Does not own the goods — it facilitates transactions between buyers and sellers and earns a commission","Always sells directly to final consumers","Is employed by the retailer, not the producer"],
+ ans:1, exp:"Agents/brokers = do NOT take title (ownership) to goods. They bring buyers and sellers together and earn a commission on the transaction. They have low overhead (no warehouse, no inventory) and specialize in market knowledge and contacts."},
+
+{ch:'ch12',q:"A 'warehouse club' (like Costco) is a type of retailer that:",
+ opts:["Sells only to businesses on a wholesale basis","Sells large quantities at very low prices to members who pay an annual fee, operating in no-frills warehouse-style stores","Provides secure, temperature-controlled storage for business inventory","Sells remaindered and liquidated inventory at deep discounts"],
+ ans:1, exp:"Warehouse clubs (Costco, Sam's Club) = large, no-frills stores selling in bulk at very low prices to members. They blur the retail/wholesale line — many members are small businesses, but consumers are also welcome. Annual membership fees contribute significantly to profitability."},
+
+{ch:'ch12',q:"Which statement about 'convenience stores' in retailing is most accurate?",
+ opts:["They offer the lowest prices because of high sales volume","They charge higher prices than supermarkets but compete on location, hours, and speed of transaction","They carry a wider product assortment than department stores","They are declining rapidly because consumers prefer to shop online"],
+ ans:1, exp:"Convenience stores = small, accessible locations, extended hours, fast transactions — but higher prices than supermarkets. They compete on time and place convenience, not price. 7-Eleven and Wawa are examples. Their value is saving shopping time, not saving money."},
+
+// ─── CHAPTER 13 — IMC ────────────────────────────────────────────────────────
+{ch:'ch13',q:"What does the AIDA model stand for?",
+ opts:["Advertising, Interest, Demand, Action","Attention, Interest, Desire, Action","Awareness, Information, Decision, Action","Attention, Influence, Desire, Adoption"],
+ ans:1, exp:"AIDA = Attention → Interest → Desire → Action. These are the four promotion jobs a marketer must accomplish to move a customer toward purchase."},
+
+{ch:'ch13',q:"Which promotion method involves direct spoken communication between sellers and potential customers?",
+ opts:["Advertising","Publicity","Personal selling","Sales promotion"],
+ ans:2, exp:"Personal selling is direct spoken communication — usually in person, sometimes by phone. It allows salespeople to adapt the 4 Ps on the spot based on customer feedback."},
+
+{ch:'ch13',q:"Integrated Marketing Communications (IMC) is best defined as:",
+ opts:["Using only digital media for all promotion","The intentional coordination of every communication from a firm to convey a consistent and complete message","Combining advertising and personal selling into one department","Using both push and pull strategies simultaneously"],
+ ans:1, exp:"IMC = intentionally coordinating every communication from a firm to a target customer to convey a consistent and complete message. Starbucks is the textbook example — ads, app, and baristas all say the same thing."},
+
+{ch:'ch13',q:"A pulling strategy in promotion means:",
+ opts:["Pushing products to channel members using personal selling","Getting customers to ask intermediaries for the product","Using sales promotions aimed at wholesalers","Training salespeople to be more aggressive"],
+ ans:1, exp:"Pulling = using promotion (ads, coupons) to get consumers to demand the product from retailers. Pushing = using promotion to convince channel members to carry the product."},
+
+{ch:'ch13',q:"Which promotion objective is MOST appropriate for a brand-new product that consumers have never heard of?",
+ opts:["Reminding","Persuading","Informing","Maintaining"],
+ ans:2, exp:"Informing is the key objective in market introduction — customers first need to know the product exists. 'This new idea is good' is the message."},
+
+{ch:'ch13',q:"In the communication process, 'noise' refers to:",
+ opts:["Loud TV commercials","Any distraction that reduces the effectiveness of the communication process","The feedback loop between sender and receiver","Encoding errors made by the advertiser"],
+ ans:1, exp:"Noise = any distraction that reduces message effectiveness. It can be literal (static) or figurative (competing ads, customer distraction)."},
+
+{ch:'ch13',q:"Which of the following is the BEST example of a pushing strategy?",
+ opts:["A TV ad for Pepsi asking consumers to try the new flavor","A manufacturer offering retailers extra discounts to stock its new product","A firm mailing coupons directly to consumers","A celebrity endorsing a product on Instagram"],
+ ans:1, exp:"Pushing = promotion aimed at channel members (wholesalers, retailers) to encourage them to carry the product. Extra trade discounts to retailers = classic push."},
+
+{ch:'ch13',q:"The task method of promotion budgeting is also called:",
+ opts:["Percentage-of-sales method","Competitive parity method","Zero-based budgeting","Affordability method"],
+ ans:2, exp:"Task method = zero-based budgeting. You decide what needs to be done to reach objectives, then estimate the cost. It's the most customer-oriented approach — 'what do we need to accomplish?'"},
+
+{ch:'ch13',q:"'Primary demand' in advertising means demand for:",
+ opts:["The company's own brand specifically","The general product idea or category","Premium-priced products only","Products in the decline stage of the life cycle"],
+ ans:1, exp:"Primary demand = demand for the general product idea (e.g., 'drink more milk'). Selective demand = demand for a specific brand (e.g., 'drink Fairlife')."},
+
+{ch:'ch13',q:"According to the adoption curve, which group is first to adopt new products and relies most on impersonal/scientific sources?",
+ opts:["Early majority","Early adopters","Innovators","Late majority"],
+ ans:2, exp:"Innovators (3–5% of market) are first — they seek out product info and don't mind risk. Early adopters are second and serve as opinion leaders."},
+
+{ch:'ch13',q:"'Public relations' in the context of promotion refers to:",
+ opts:["Advertising directed at the general public","Communication with noncustomers — including labor, public interest groups, stockholders, and government","Press releases about new products only","Social media management"],
+ ans:1, exp:"PR = communication with noncustomers. The advertising manager handles mass selling; the PR function covers stakeholders outside the customer base."},
+
+{ch:'ch13',q:"During the market MATURITY stage of the product life cycle, the dominant promotion objective typically becomes:",
+ opts:["Informing — 'this new idea is good'","Persuading — 'our brand is better, really'","Reminding — customers already know and love us","Building primary demand for the category"],
+ ans:1, exp:"In maturity, most customers know the product. The fight is for share, so persuasion ('our brand is better, really') dominates. Reminder advertising also works for strong brands."},
+
+{ch:'ch13',q:"Which of the following is NOT one of the main promotion methods in the promotion blend?",
+ opts:["Personal selling","Advertising","Distribution (Place)","Sales promotion"],
+ ans:2, exp:"The promotion blend = personal selling, mass selling (advertising + publicity), and sales promotion. Place/distribution is a separate P, not a promotion tool."},
+
+{ch:'ch13',q:"'Encoding' in the communication process refers to:",
+ opts:["The receiver translating the message","The channel through which the message is sent","The source deciding what to say and translating it into words or symbols","Measuring the effectiveness of the promotion"],
+ ans:2, exp:"Encoding = the source (sender) translates the message idea into words, images, or symbols with the same meaning for the receiver. Decoding is the reverse — the receiver interprets."},
+
+{ch:'ch13',q:"Which group in the adoption curve is described as 'well-respected by peers and often serves as an opinion leader'?",
+ opts:["Innovators","Early majority","Early adopters","Late majority"],
+ ans:2, exp:"Early adopters (10–15%) are the opinion leaders. They have the most contact with salespeople. Their satisfaction drives word-of-mouth that brings in the early majority."},
+
+// ─── CHAPTER 15 — Advertising & Sales Promotion ────────────────────────────────
+{ch:'ch15',q:"Advertising that tries to develop demand for a product category (not a specific brand) is called:",
+ opts:["Competitive advertising","Institutional advertising","Pioneering advertising","Reminder advertising"],
+ ans:2, exp:"Pioneering advertising builds primary demand — it introduces a product concept. Example: 'Got Milk?' promotes the category, not a brand."},
+
+{ch:'ch15',q:"Which type of advertising uses specific comparisons between brands by name?",
+ opts:["Reminder advertising","Indirect competitive advertising","Comparative advertising","Institutional advertising"],
+ ans:2, exp:"Comparative advertising directly names and compares competitors. Example: Pepsi Challenge vs. Coca-Cola. Indirect competitive advertising just says 'our product is better' without naming rivals."},
+
+{ch:'ch15',q:"Institutional advertising is designed to:",
+ opts:["Drive immediate purchase of a specific product","Focus on the name, prestige, and goodwill of a company or organization","Compare the company's products against those of competitors","Stimulate sales through coupons and discounts"],
+ ans:1, exp:"Institutional (aka corporate) advertising builds company image and goodwill — it promotes the organization, not a specific product. GE's 'Ecomagination' campaign is a textbook example."},
+
+{ch:'ch15',q:"A 'slotting fee' (stocking fee) is paid by a producer to:",
+ opts:["Consumers who buy a new product for the first time","Retailers to secure shelf space for a new product","Advertising agencies for media placement","Wholesalers as a quantity discount"],
+ ans:1, exp:"Slotting fees = payments producers make to retailers to get shelf space for a new product. It's listed on the price equation as an 'allowance' on the channel-member side."},
+
+{ch:'ch15',q:"Cooperative advertising involves:",
+ opts:["Two competing brands sharing the same ad space","Manufacturers sharing advertising costs with channel members","A firm pooling its TV and print budgets together","Government-funded product advertising"],
+ ans:1, exp:"Cooperative advertising = a manufacturer shares ad costs with wholesalers or retailers. The manufacturer may provide materials and pay a % of costs when the channel member runs ads featuring the brand."},
+
+{ch:'ch15',q:"Which of the following is a consumer sales promotion tool designed to encourage immediate trial?",
+ opts:["Trade show exhibit","Push money to salespeople","Free samples","Slotting allowance to retailers"],
+ ans:2, exp:"Free samples are a classic trial-building sales promotion aimed at consumers. Trade shows and slotting fees target channel members, not end consumers."},
+
+{ch:'ch15',q:"Banner ads and search ads are examples of which type of advertising?",
+ opts:["Institutional advertising","Cooperative advertising","Digital advertising","Out-of-home advertising"],
+ ans:2, exp:"Digital advertising includes banner ads (build brands), search ads (capture customers who know what they want), social media ads (target by behavior/demographics), and mobile ads (location-based)."},
+
+{ch:'ch15',q:"'Direct response promotion' is best described as:",
+ opts:["Advertising on TV to a mass audience","Direct communication between seller and individual customer designed to prompt immediate feedback","In-store promotional displays","Personal selling at trade shows"],
+ ans:1, exp:"Direct response = direct communication (email, direct mail, telemarketing) designed to prompt immediate customer response. It's not face-to-face personal selling, but it is targeted at individuals."},
+
+{ch:'ch15',q:"A point-of-purchase (POP) display is most useful for achieving which AIDA objective?",
+ opts:["Attention — getting the customer to notice the brand","Decision — making the final purchase choice in the store","Interest — building awareness of the product category","Desire — creating emotional attachment to the brand"],
+ ans:1, exp:"POP displays target the Action stage — the consumer is IN the store and the display triggers or reinforces the final purchase decision. The textbook notes that many purchase decisions happen in the store."},
+
+{ch:'ch15',q:"Which type of digital advertising is BEST when a customer already knows what they want and is actively searching?",
+ opts:["Banner ads","Social media ads","Search advertising","Mobile/geolocation ads"],
+ ans:2, exp:"Search advertising (Google Ads, etc.) captures customers with existing intent — 'know what customers want.' Banner ads build awareness. Social ads target by who you are. Mobile targets by where you are."},
+
+{ch:'ch15',q:"'Reminder advertising' is most appropriate when:",
+ opts:["Launching a new product into a market with no awareness","Target customers already have positive attitudes about the brand","A firm needs to compare its product directly to a competitor's","Building primary demand for a product category"],
+ ans:1, exp:"Reminder advertising = appropriate in market maturity when customers already know and like the brand. It keeps the brand top-of-mind. Example: Coca-Cola doesn't need to explain what it is."},
+
+{ch:'ch15',q:"Trade promotions are aimed at:",
+ opts:["Final consumers","Channel members like wholesalers and retailers","A firm's own sales force only","Both consumers and channel members equally"],
+ ans:1, exp:"Trade promotions target channel members (wholesalers, retailers) — push money, cooperative advertising, trade shows, and stocking allowances are all trade promotions. Consumer promotions target end users."},
+
+{ch:'ch15',q:"A 'rebate' is a sales promotion tool that:",
+ opts:["Gives an immediate discount at the point of sale","Provides a refund to consumers who mail in a proof of purchase after buying","Pays channel members to push a product","Allows retailers to return unsold inventory for credit"],
+ ans:1, exp:"Rebates = money back AFTER purchase, usually requiring a proof-of-purchase submission. This delays the discount, which means not all buyers actually redeem it — a benefit to manufacturers."},
+
+{ch:'ch15',q:"Pioneering advertising is MOST likely to be used during which stage of the product life cycle?",
+ opts:["Market maturity","Sales decline","Market introduction","Market growth"],
+ ans:2, exp:"Pioneering ads dominate in market introduction — you're educating consumers about a new concept. As the product matures, competitive and reminder advertising become more important."},
+
+{ch:'ch15',q:"An advertising agency is primarily responsible for:",
+ opts:["Setting the company's overall marketing strategy","Managing the company's mass selling effort in various media","Running the company's personal selling program","Setting prices for advertising slots in media"],
+ ans:1, exp:"Advertising agencies manage the company's mass selling effort — they plan, create, and place advertising in TV, print, digital, and other media on behalf of the client company."},
+
+{ch:'ch15',q:"Which sequence correctly maps advertising types to the AIDA model stages?",
+ opts:["Pioneer ads → Action; Reminder ads → Attention; Comparative ads → Desire","Teaser/Pioneer ads → Attention; Informative ads → Interest; Competitive ads → Desire; POP/Price deal → Action","Institutional ads → Attention; Search ads → Interest; Direct mail → Desire; Coupons → Action","Reminder ads → Attention; Pioneer ads → Desire; Comparative ads → Action"],
+ ans:1, exp:"Teaser/Pioneer → Attention; Informative/Celebrity/Search → Interest; Competitive/Testimonials/Comparative → Desire (Evaluation/Trial); Direct-action retail ads, POP, price deals, reminder ads → Action/Confirmation."},
+
+// ─── CHAPTER 16 — Earned, Owned & Social Media ───────────────────────────────
+{ch:'ch16',q:"Paid media refers to:",
+ opts:["Messages earned through positive press coverage","Messages generated by a brand and communicated through channels the brand PAYS to access","Messages generated by customers through word-of-mouth","Messages published on the company's own website"],
+ ans:1, exp:"Paid media = brand pays for access to the message channel. Examples: TV ads, online display ads, radio spots, paid search. The brand controls the message but consumers trust it less."},
+
+{ch:'ch16',q:"'Earned media' is BEST described as:",
+ opts:["The brand's own website and social media pages","Advertising purchased in newspapers or magazines","Promotional messages generated by third parties such as journalists or customers — not directly by the company","Content that a brand creates and places on its own blog"],
+ ans:2, exp:"Earned media = third parties (journalists, customers) talking about you — news stories, customer reviews, social posts about your brand. It's the MOST trusted but you have the LEAST control."},
+
+{ch:'ch16',q:"Owned media has which of the following characteristics?",
+ opts:["Highest level of consumer trust; generated by independent journalists","The brand controls the message channel directly; relatively low cost; slow to build audience","Purchased media space; precise targeting; less trusted by consumers","Generated by customer reviews and social media posts"],
+ ans:1, exp:"Owned media = brand controls the channel (website, brand blog, email newsletter, brand social pages). High message control, relatively low cost, but slow to build an audience and needs to work with paid media."},
+
+{ch:'ch16',q:"According to the textbook, which type of media is the MOST trusted by consumers?",
+ opts:["Paid media (advertising)","Owned media (company website, email)","Earned media (word-of-mouth, reviews, news stories)","Sponsored content"],
+ ans:2, exp:"Earned media is most trusted — consumers are most likely to act on a recommendation from a friend or a news story than on an advertisement. The textbook study found the top 4 most trusted sources were earned and owned media."},
+
+{ch:'ch16',q:"A company's branded Facebook page, official YouTube channel, and email newsletter are all examples of:",
+ opts:["Paid media","Earned media","Owned media","Social media advertising"],
+ ans:2, exp:"Owned media = channels the brand directly controls. This includes the brand's own website, blog, email list, and brand-managed social media profiles. Note: PAID ads on Facebook = paid media, not owned."},
+
+{ch:'ch16',q:"'Pass-along' in the context of earned media refers to:",
+ opts:["Distributing print catalogs through the mail","Customers sharing or forwarding information about a product to others (word-of-mouth, viral sharing)","A company passing product samples through retail channels","Transferring an advertising campaign from one market to another"],
+ ans:1, exp:"Pass-along = customers sharing information (recommending, forwarding, retweeting, posting reviews). It's a powerful form of earned media because it comes from trusted sources."},
+
+{ch:'ch16',q:"SEO (Search Engine Optimization) is a strategy used to:",
+ opts:["Pay for prominent placement in Google search results","Improve a site's organic ranking in search results so it is found when customers search","Track customer sentiment on social media","Create display ads that appear on third-party websites"],
+ ans:1, exp:"SEO = improving your site so it ranks higher in organic (unpaid) search results. SEM (Search Engine Marketing) = paying for placement. SEO is owned/earned; SEM is paid."},
+
+{ch:'ch16',q:"Which of the following is a CHALLENGE (disadvantage) of earned media?",
+ opts:["It is the most expensive form of promotion","Companies have very little control over the message, which can be negative","It is less trusted than paid advertising","It requires a company to pay journalists directly to write stories"],
+ ans:1, exp:"Earned media's key challenge: very little message control, can be negative, difficult to measure, difficult to create, and difficult to target. A bad review is earned media too."},
+
+{ch:'ch16',q:"A 'brand community' on social media is BEST described as:",
+ opts:["A paid advertising group on Facebook targeting brand competitors","A group of consumers who share a sense of belonging and enthusiasm for a brand, connecting through social media","A company's internal marketing team that manages social accounts","A third-party influencer network contracted by the brand"],
+ ans:1, exp:"Brand communities = groups of consumers who connect around shared passion for a brand. They generate earned media (word-of-mouth, user-generated content) and build loyalty."},
+
+{ch:'ch16',q:"'Geolocation' in digital/mobile advertising allows marketers to:",
+ opts:["Track what keywords customers are searching","Target customers based on their physical location at a given time","Monitor which social media platform a user is on","Measure how long customers spend on a website"],
+ ans:1, exp:"Geolocation = mobile advertising that targets consumers based on where they physically are. Example: a coffee shop ad that appears when you're within 500 feet of the store."},
+
+{ch:'ch16',q:"Which statement about paid media is CORRECT?",
+ opts:["It is the most trusted information source for consumers","It offers high message control but is becoming less effective as consumers learn to avoid ads","It is generated by independent journalists, not the company","It is always lower cost than owned media"],
+ ans:1, exp:"Paid media = high message control, potentially large audience, BUT less trusted, customers avoid it easily, and it's more costly with declining effectiveness as ad-blocking and ad fatigue increase."},
+
+{ch:'ch16',q:"'Influencer marketing' falls primarily under which type of media?",
+ opts:["Paid media, when the brand pays the influencer to promote the product","Owned media, since the brand controls what the influencer says","Earned media, because influencers are independent journalists","None of the above — influencer marketing is a separate category"],
+ ans:0, exp:"When brands pay influencers, it's paid media (even though it looks organic). If an influencer genuinely recommends a product without payment, that's earned media. Most brand-influencer deals = paid."},
+
+{ch:'ch16',q:"The textbook's 'experience' category of how customers obtain information refers to:",
+ opts:["Customers reading online reviews before purchasing","Customers physically using or interacting with branded products/services","Watching advertising on TV or YouTube","Following a brand's social media account"],
+ ans:1, exp:"'Experience' = customers encountering branded services directly — trying the product, visiting the store, using the app. This is a form of owned media and is highly influential on purchase decisions."},
+
+{ch:'ch16',q:"A marketing manager who wants the MOST message control and is willing to pay should choose:",
+ opts:["Earned media","Owned media","Paid media","Word-of-mouth"],
+ ans:2, exp:"Paid media = highest control (you write the ad), but you pay for access to the channel. Owned media also has high control but builds slowly. Earned media = least control."},
+
+{ch:'ch16',q:"Which benefit does OWNED media have over PAID media?",
+ opts:["Higher consumer trust","More precise targeting capabilities","Relatively lower cost and niche audiences","Faster audience reach"],
+ ans:2, exp:"Owned media is relatively low cost and can serve niche audiences well. Paid media reaches larger audiences faster but costs more. However, owned media is slower to build and needs paid media to drive traffic initially."},
+
+// ─── CHAPTER 17 — Pricing Objectives & Policies ──────────────────────────────
+{ch:'ch17',q:"A 'target return' pricing objective means the firm:",
+ opts:["Tries to maximize total dollar profits regardless of sales volume","Sets a specific profit goal, such as a percentage of sales or return on investment","Prices products to match exactly what competitors charge","Focuses on growing market share above all else"],
+ ans:1, exp:"Target return = a profit-oriented objective that sets a specific level of profit (e.g., 15% ROI or 8% return on sales). It differs from profit maximization because it aims for a specific, satisfactory level — not the theoretical maximum."},
+
+{ch:'ch17',q:"A company using a 'status quo' pricing objective is primarily trying to:",
+ opts:["Maximize profits by charging what the market will bear","Grow its market share through aggressive low pricing","Avoid rocking the boat — meet competition or maintain stable prices","Skim early adopters before cutting price for the mass market"],
+ ans:2, exp:"Status quo objectives = 'don't rock the boat.' The firm just wants to match competition and keep prices stable. Common when a firm is satisfied with its current position."},
+
+{ch:'ch17',q:"A 'skimming price policy' involves:",
+ opts:["Setting a low initial price to discourage competition and build volume","Starting with a high price to 'skim' the market before targeting more price-sensitive customers","Charging different prices to different customer segments for the same product","Pricing just below a round number (e.g., $9.99 instead of $10)"],
+ ans:1, exp:"Skimming = high price at introduction to recover costs and maximize early profits from price-insensitive customers, then lowering price later. Works best when there are few substitutes. Think: new tech products."},
+
+{ch:'ch17',q:"A 'penetration pricing policy' is designed to:",
+ opts:["Maximize profits in market introduction by charging a premium price","Set a low price to achieve high volume and discourage competitive entry","Charge each customer the maximum they're willing to pay","Offer discounts only to loyal long-term customers"],
+ ans:1, exp:"Penetration pricing = low price from the start to grab large market share and discourage competitors from entering. High volume may lower costs further. Opposite of skimming."},
+
+{ch:'ch17',q:"'Odd-even pricing' (e.g., $9.99 instead of $10.00) is a type of:",
+ opts:["Quantity discount","Status quo pricing","Psychological pricing","Penetration pricing"],
+ ans:2, exp:"Odd-even pricing is psychological pricing — $9.99 feels significantly cheaper than $10 even though it's only 1 cent different. It plays on how customers perceive price thresholds."},
+
+{ch:'ch17',q:"A quantity discount is offered to encourage buyers to:",
+ opts:["Pay early to receive a cash rebate","Buy in larger amounts by reducing the per-unit price","Purchase during off-peak seasons","Switch from one product line to another"],
+ ans:1, exp:"Quantity discounts = lower price per unit for buying more. Two types: (1) Cumulative — based on total purchases over a period; (2) Noncumulative — applies to a single order only."},
+
+{ch:'ch17',q:"A 'seasonal discount' is offered to:",
+ opts:["Customers who pay their invoices within a specified short period","Channel members who perform marketing functions for the producer","Buyers who purchase products during the off-season or sooner than normal","Consumers who return outdated products for newer versions"],
+ ans:2, exp:"Seasonal discounts = price reduction for buying earlier than normal demand would require. Example: summer furniture sold at a discount in winter. Encourages buyers to stock up and smooth out demand."},
+
+{ch:'ch17',q:"A 'cash discount' (e.g., '2/10 net 30') is offered to:",
+ opts:["Customers who buy in large quantities","Channel members who perform promotional functions","Buyers who pay their invoices quickly","End consumers who use cash instead of credit cards"],
+ ans:2, exp:"Cash discount = reduction for paying promptly. '2/10 net 30' = 2% discount if paid within 10 days; full amount due in 30. It improves the seller's cash flow. Even a '2%' discount annualizes to ~36% — a big deal."},
+
+{ch:'ch17',q:"'Trade (functional) discounts' are given to channel members primarily because:",
+ opts:["They buy in very large quantities","They perform marketing functions (storing, transporting, selling) for the producer","They pay their bills quickly","They purchase products during the off-season"],
+ ans:1, exp:"Trade discounts = reductions from list price given to channel members who perform marketing functions. A retailer who stocks, displays, and sells the product gets a trade discount. It's compensation for work done."},
+
+{ch:'ch17',q:"A 'one-price policy' means the seller:",
+ opts:["Only charges one price per year, regardless of costs","Offers the same price to all customers for the same product and quantity","Never negotiates prices with any customer","Sets a price once and never adjusts it even when costs change"],
+ ans:1, exp:"One-price policy = same price for all customers buying under the same conditions. It's simple, consistent, and avoids customer resentment. Most U.S. retailers use one-price policies. The opposite is a flexible-price policy."},
+
+{ch:'ch17',q:"A 'flexible-price policy' allows:",
+ opts:["Prices to change based on demand curves automatically","Different customers to pay different prices based on bargaining, relationships, or competitive situations","Customers to choose their own price based on perceived value","Prices to adjust only when raw material costs change"],
+ ans:1, exp:"Flexible-price policy = different customers can pay different prices for the same product. Common in B2B, car sales, real estate. Advantage: maximizes revenue. Risk: customer resentment if they learn others paid less."},
+
+{ch:'ch17',q:"'Prestige pricing' works by:",
+ opts:["Setting prices below competitors to signal value","Using a high price as a signal of quality and exclusivity","Offering the lowest price in the market to build volume","Pricing products identically to competitors"],
+ ans:1, exp:"Prestige pricing = using a high price to signal quality and status. Luxury brands like Rolex and Louis Vuitton use prestige pricing. If the price dropped significantly, many customers would question the quality."},
+
+{ch:'ch17',q:"A 'sales-oriented' pricing objective focuses on:",
+ opts:["Achieving a specific rate of return on investment","Growing dollar or unit sales volume or market share — regardless of immediate profit","Meeting the prices of all major competitors","Charging the maximum price the market will bear"],
+ ans:1, exp:"Sales-oriented objectives = grow sales volume or market share. NOT the same as profit maximization. Growth in market share is the most popular version. Risk: growing sales while losing money on each sale."},
+
+{ch:'ch17',q:"'Push money' (or 'spiff') is a type of allowance paid to:",
+ opts:["Consumers as a rebate for purchasing the product","Retail salespeople as an incentive to push a specific product","Advertising agencies for media placement","Wholesalers for warehousing inventory"],
+ ans:1, exp:"Push money = payments to retail salespeople to encourage them to actively recommend and sell a specific product. It's listed in the textbook as an 'allowance' on the channel member's price equation."},
+
+{ch:'ch17',q:"A 'value pricing' strategy means the firm:",
+ opts:["Always charges the lowest possible price","Sets price based on cost-plus markup","Offers superior value at a fair price — not necessarily the lowest price","Matches the exact price of the market leader"],
+ ans:2, exp:"Value pricing = offering target customers superior value — better quality, service, or total customer experience — at a price that makes the total offer attractive. It's not the same as low pricing. It's about delivering more for the price."},
+
+// ─── CHAPTER 18 — Price Setting ───────────────────────────────────────────────
+{ch:'ch18',q:"A retailer uses a 'markup on selling price' of 30%. If the selling price is $100, the cost to the retailer was:",
+ opts:["$30","$70","$43","$77"],
+ ans:1, exp:"Markup on selling price: markup% = (price − cost) / price. So: 0.30 = ($100 − cost) / $100 → cost = $70. Note: markup on cost would give a different answer. The textbook covers both — know which base is being used."},
+
+{ch:'ch18',q:"'Average-cost pricing' involves:",
+ opts:["Setting price based on what competitors charge on average","Estimating total costs, dividing by expected unit sales, and adding a markup","Finding the price that maximizes marginal revenue","Setting price at the midpoint between cost and maximum willingness to pay"],
+ ans:1, exp:"Average-cost pricing = add up all costs (fixed + variable), divide by expected units sold to get average cost per unit, then add a markup. Simple but dangerous — if sales differ from the forecast, the price may be wrong."},
+
+{ch:'ch18',q:"Break-even analysis tells a firm:",
+ opts:["The price at which it will maximize profit","The quantity of units it must sell at a given price to cover all costs","Which customer segments generate the most revenue","How to set markups for each product in a full product line"],
+ ans:1, exp:"Break-even = the quantity at which total revenue equals total costs (zero profit). Formula: BEP = Fixed Costs ÷ (Price − Variable Cost per unit). Above this point = profit; below = loss."},
+
+{ch:'ch18',q:"If a product's fixed costs are $10,000, the price is $25, and variable cost per unit is $15, the break-even quantity is:",
+ opts:["400 units","667 units","1,000 units","250 units"],
+ ans:2, exp:"BEP = Fixed Costs ÷ Contribution per unit = $10,000 ÷ ($25 − $15) = $10,000 ÷ $10 = 1,000 units. Contribution margin per unit = price − variable cost."},
+
+{ch:'ch18',q:"In marginal analysis, profit is maximized when:",
+ opts:["Total revenue is greatest","Marginal revenue equals marginal cost (MR = MC)","Average cost is at its lowest point","The firm sells the maximum possible quantity"],
+ ans:1, exp:"MR = MC is the profit-maximization condition. Marginal revenue = the extra revenue from one more unit. Marginal cost = the extra cost of one more unit. When they're equal, any additional unit would cost more than it earns."},
+
+{ch:'ch18',q:"'Demand-backward pricing' (also called demand-oriented pricing) starts by:",
+ opts:["Calculating total costs first, then adding a markup","Researching what price customers are willing to pay, then working backward to determine if costs allow a profit","Matching competitors' prices exactly","Setting the break-even price and then adding desired profit margin"],
+ ans:1, exp:"Demand-backward pricing = start with what customers will pay, then see if you can make a profit at that price. It's customer-oriented. Average-cost pricing starts with costs and ignores what customers actually value."},
+
+{ch:'ch18',q:"The 'contribution margin' per unit is calculated as:",
+ opts:["Total revenue minus total variable costs","Selling price minus variable cost per unit","Fixed costs divided by unit sales","Net profit divided by total revenue"],
+ ans:1, exp:"Contribution margin per unit = price − variable cost per unit. This is how much each unit 'contributes' to covering fixed costs and profit. Used in break-even analysis and pricing decisions."},
+
+{ch:'ch18',q:"Which of the following is a FIXED cost for a manufacturing firm?",
+ opts:["Raw materials per unit","Sales commissions per unit sold","Factory rent","Packaging costs per unit"],
+ ans:2, exp:"Fixed costs don't change with output — factory rent, insurance, salaries, and depreciation are fixed. Variable costs change directly with production — materials, packaging, and per-unit sales commissions are variable."},
+
+{ch:'ch18',q:"A major DISADVANTAGE of average-cost pricing is that:",
+ opts:["It is too complex for most firms to calculate","It ignores competitor pricing entirely","It assumes sales volume is known in advance, but if actual sales differ, the average cost changes","It requires a detailed marginal analysis to implement"],
+ ans:2, exp:"Average-cost pricing's big flaw: the average cost per unit CHANGES depending on how many units you actually sell. If you sell less than expected, your cost per unit goes up — making your price too low to be profitable."},
+
+{ch:'ch18',q:"'Full-line pricing' refers to:",
+ opts:["Setting the same price for every product in the line","Pricing the product line so that the prices together make sense and encourage purchases across the line","Always pricing every product at full cost plus a standard markup","Charging full list price with no discounts on any item in the line"],
+ ans:1, exp:"Full-line pricing = setting prices for an entire product line so they fit together logically and encourage customers to 'trade up.' Prices should reflect real differences in value — not be set so close together that customers always buy the lowest-priced item."},
+
+{ch:'ch18',q:"'Price elasticity' of demand measures:",
+ opts:["How quickly prices change in response to cost increases","How responsive quantity demanded is to a change in price","The relationship between price and profit margin","How competitors react to a firm's price changes"],
+ ans:1, exp:"Price elasticity = % change in quantity demanded ÷ % change in price. Elastic demand (>1): customers are sensitive — a price increase causes a big drop in quantity. Inelastic demand (<1): customers aren't sensitive — price changes have little effect on quantity."},
+
+{ch:'ch18',q:"If a product has INELASTIC demand, raising the price will:",
+ opts:["Cause a large drop in quantity sold, hurting total revenue","Have little effect on quantity sold, increasing total revenue","Have no effect on revenue at all","Always lead to competitors matching the price increase"],
+ ans:1, exp:"Inelastic demand = customers aren't sensitive to price. Raising price → slightly fewer units sold, but total revenue (price × quantity) INCREASES because the higher price more than offsets the small drop in volume."},
+
+{ch:'ch18',q:"'Value-in-use pricing' sets a price based on:",
+ opts:["The firm's production cost plus a target profit","What the product is worth to the customer based on how it helps them — the economic value it delivers","The price that competitors are currently charging","The break-even point plus a standard industry markup"],
+ ans:1, exp:"Value-in-use = price based on the economic value the customer gets from using the product. If a machine saves a factory $100,000/year, you can charge more than cost-based pricing would suggest — because the customer captures real economic value."},
+
+{ch:'ch18',q:"When setting prices, the BEST approach from a marketing perspective is to:",
+ opts:["Start with total costs, add markup, and publish the price","Start with cost plus standard industry markup","Start with what customers are willing to pay (demand-oriented), then determine if costs allow profitable production","Start with the competitor's price and undercut by 5%"],
+ ans:2, exp:"The marketing-oriented approach is demand-backward / demand-oriented pricing. You start with what the target customer values, find the price they'll pay, then work backward to see if you can produce profitably at that price."},
+
+{ch:'ch18',q:"A markup of 50% on COST for an item that costs $40 means the selling price is:",
+ opts:["$60","$80","$20","$70"],
+ ans:0, exp:"Markup on cost: Selling price = Cost × (1 + markup%) = $40 × 1.50 = $60. Compare to markup on selling price: if markup on price were 50%, the selling price would be $80 ($40 ÷ 0.50). Always identify which base is being used."},
+
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 13 (5 questions) ────────────────────
+{ch:'ch13',q:"Regarding promotion methods, which of the following statements is TRUE?",
+ opts:["Personal selling can provide immediate feedback","Publicity is any paid form of nonpersonal presentation of ideas, goods, or services","Advertising is usually more tailored to individual needs than personal selling","Sales promotion activities produce results very slowly compared to advertising","Advertising is the most expensive promotion method per customer reached"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. Personal selling's KEY advantage = it can provide IMMEDIATE feedback — the salesperson adjusts on the spot. Publicity is NOT paid (that's advertising). Advertising reaches mass audiences cheaply per person. Sales promotions produce QUICK results. Personal selling is the most expensive per contact."},
+
+{ch:'ch13',q:"Which of the following ACCURATELY characterizes publicity?",
+ opts:["It is generally less useful than advertising for promoting a truly new product","It is mass selling that avoids paying media costs","It is any paid form of nonpersonal presentation of ideas, goods, or services by an identified sponsor","It is more expensive than all other promotion methods","It is more flexible than personal selling"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. Publicity = mass selling that avoids paying media costs — the firm doesn't pay for the space or time, a journalist or third party covers it. Advertising = PAID, nonpersonal, identified sponsor. Publicity has NO payment to media and NO identified sponsor control."},
+
+{ch:'ch13',q:"Which of the following would NOT be an example of sales promotion?",
+ opts:["A flyer placed on a homeowner's door announcing a new lawn service","A coupon offering a buy-one-get-one-free deal at a pizza restaurant","A free sample of a new breakfast cereal mailed to consumers","A special display of snack chips placed in a grocery store's main aisle","A contest in which a fast-food chain distributes scratch-off game pieces"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. A flyer is advertising — it's a nonpersonal, mass communication. Sales promotion = activities that STIMULATE trial or purchase: coupons, free samples, in-store displays, contests, sweepstakes. A door flyer = advertising, not promotion."},
+
+{ch:'ch13',q:"The AIDA model consists of:",
+ opts:["Awareness, Influence, Decoding, and Advertising","Attention, Interest, Desire, and Action","Appraisal, Insight, Discernment, and Action","Advertise, Influence, Desire, and Attention","Awareness, Information, Design, and Attention"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. AIDA = Attention → Interest → Desire → Action. These are the four promotion tasks a marketer must accomplish to move a customer to purchase. Every ad or sales call should advance the customer through these stages."},
+
+{ch:'ch13',q:"The GEICO slogan '15 minutes could save you 15 percent or more on your car insurance' is an example of which element of the communication process?",
+ opts:["message","source","receiver","encoder","feedback"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. The slogan IS the message — the actual content being communicated. The source = GEICO (sender). The encoder = the creative team that put it into words. The receiver = the consumer hearing/seeing it. Feedback = consumer response (clicking, calling). The slogan itself = message."},
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 15 (5 questions) ────────────────────
+{ch:'ch15',q:"Which of the following is the BEST example of a specific, measurable advertising objective?",
+ opts:["'We want 35% of our target customers to be aware of our new product within the next two months.'","'We want to generate enough interest in our product that intermediaries will be willing to stock it.'","'We want to make older consumers aware of our product—since they have the greatest need.'","'We want to increase profits—and that will require significantly expanding sales of our product.'","'We want to win an advertising industry artistic award for the creative effort on the ad.'"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. Good advertising objectives must be specific, measurable, and time-bound — and focused on COMMUNICATION tasks (awareness, attitude), not business outcomes like profit. Option A = 35% awareness, specific target audience, 2-month deadline. All others are vague, profit-focused, or not communication-specific."},
+
+{ch:'ch15',q:"Comparative ads for a product work BEST in which stage of the adoption process?",
+ opts:["awareness","interest","evaluation and trial","decision","confirmation"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Comparative advertising works best at EVALUATION AND TRIAL — when customers are actively comparing alternatives and need reasons to prefer your brand. At awareness, they just need to know you exist. At confirmation, they've already bought and need reassurance."},
+
+{ch:'ch15',q:"When a firm's president appears in TV testimonial ads to assure customers, employees, and stockholders that the firm is making a fast recovery from some problem, it is an example of:",
+ opts:["institutional advertising","reminder advertising","competitive advertising","comparative advertising","pioneering advertising"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. Institutional advertising = promotes the company's name, image, and goodwill — NOT a specific product. A CEO assuring stakeholders during a crisis = classic institutional ad. It's about rebuilding the firm's reputation, not selling a product."},
+
+{ch:'ch15',q:"Which advertising medium would be BEST for achieving the WIDEST reach?",
+ opts:["newspaper","direct mail","television","outdoor (billboards)","magazine"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Television reaches the widest audience — it combines sight, sound, and motion and can reach millions simultaneously. Direct mail is highly targeted (narrow). Magazines and newspapers are selective. Billboards have local reach. For broad reach → TV."},
+
+{ch:'ch15',q:"Which of the following sales promotion activities is aimed primarily at FINAL USERS of a product?",
+ opts:["sales contests","sales meetings","coupons","merchandising aids"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Coupons are aimed at FINAL CONSUMERS (end users). Sales contests, sales meetings, and merchandising aids are typically aimed at the sales force or channel members (retailers, wholesalers). Consumer promotions = coupons, samples, rebates, sweepstakes."},
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 16 (5 questions) ────────────────────
+{ch:'ch16',q:"An Apple customer tells a friend how much she likes her new iPhone. What type of consumer communication is this?",
+ opts:["must-buy","reminder","pass-along","pioneering","informative"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Pass-along = a customer sharing or recommending a product to others — word-of-mouth. It's a form of earned media because the brand doesn't pay for it and doesn't control it. This is one of the most trusted forms of promotion."},
+
+{ch:'ch16',q:"Sportwear, Inc. donated athletic hijabs to track athletes and the press ran a story about it. The media attention Sportwear received BEST describes:",
+ opts:["owned media","earned media","paid media","social media","user-generated content"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q (Sportwear scenario). The press running a news story about the donation = EARNED media — third parties (journalists) generating coverage the brand didn't pay for or directly control. Earned media is the most trusted type."},
+
+{ch:'ch16',q:"In the Sportwear scenario, the company's Facebook page — where it highlights publicity and promotes activewear — is an example of:",
+ opts:["owned media","earned media","paid media","broadcast media","user-generated content"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q (Sportwear scenario). The brand's own Facebook page = OWNED media — channels the company directly controls (website, email list, brand social profiles). Note: PAID ads on Facebook = paid media. The organic brand PAGE = owned media."},
+
+{ch:'ch16',q:"In the Sportwear scenario, the full-page advertisements in Sports Illustrated and Women's Fitness magazines are examples of:",
+ opts:["owned media","earned media","paid media","social media","user-generated content"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q (Sportwear scenario). Magazine ads = PAID media — the brand pays to access the channel (magazine space). High message control, potentially large reach, but consumers trust it least because they know the brand paid for it."},
+
+{ch:'ch16',q:"In the Sportwear scenario, Zara (a Muslim athlete with a large social media following) posted a picture of herself wearing Sportwear's hijab and recommended the product to her followers. This BEST describes:",
+ opts:["owned media","infographic","paid media","broadcast media","user-generated content"],
+ ans:4, exp:"⭐ DR. LOHTIA EXAM Q (Sportwear scenario). Zara's organic Instagram post = USER-GENERATED CONTENT (a form of earned media). If Sportwear had PAID Zara to post, it would be paid media (influencer marketing). Since she posted voluntarily = UGC = earned media."},
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 17 (5 questions) ────────────────────
+{ch:'ch17',q:"KeyLine, Inc. prices its LCD monitors so that it earns a 20% return on investment. Which pricing objective is KeyLine following?",
+ opts:["meet competition","unit sales growth","nonprice competition","target return","share of market"],
+ ans:3, exp:"⭐ DR. LOHTIA EXAM Q. Target return = a profit-oriented objective that sets a SPECIFIC profit goal expressed as a % of sales or ROI. KeyLine wants 20% ROI → that's a target return. It's different from 'maximize profit' — it aims for a satisfactory, specific level."},
+
+{ch:'ch17',q:"At Travelocity, visitors find multiple airlines with the IDENTICAL same-day price for a flight from Atlanta to San Francisco. What pricing objective are these airlines pursuing?",
+ opts:["status quo","price flexibility","quantity discount","introductory price deal","bundling"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. Status quo pricing = 'meet the competition / don't rock the boat.' Airlines matching each other's prices exactly = status quo. The goal is stable prices and avoiding price wars, not growing share or maximizing profit."},
+
+{ch:'ch17',q:"American Airlines allows members to accumulate 25,000 frequent flier miles and then redeem them for a free round-trip ticket. This is a:",
+ opts:["introductory price deal","F.O.B. discount","cash discount","cumulative quantity discount","bundle price discount"],
+ ans:3, exp:"⭐ DR. LOHTIA EXAM Q. Cumulative quantity discount = discount based on TOTAL purchases over a period of time. Miles accumulate across multiple flights → the reward comes after buying repeatedly over time. This encourages customer loyalty. Noncumulative quantity discount = applies to a single order only."},
+
+{ch:'ch17',q:"A buyer receives an invoice for $100 with terms '2/15 net 30.' She can expect to pay:",
+ opts:["$100 if she pays anytime in the first 30 days","less than $100 if she pays during the first 15 days","$100 if she pays anytime during the first 15 days","more than $100 if she pays between day 15 and day 30","the full $100 if she waits more than 30 days to pay"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. '2/15 net 30' = 2% cash discount if paid within 15 days; full amount due within 30 days. Paying in 15 days = $100 × 0.98 = $98 (LESS than $100). After 15 days but within 30 = full $100. After 30 days = full $100 (possibly a penalty). The 2% discount annualizes to ~36% — a major incentive."},
+
+{ch:'ch17',q:"A manufacturer's suggested retail price window sticker includes the same 'destination charge' for shipping regardless of whether the dealership is close to or far from the plant. This pricing practice is called:",
+ opts:["F.O.B. pricing","zone pricing","uniform delivered pricing","freight absorption pricing","None of these is correct"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Uniform delivered pricing = ONE price that includes delivery costs — the same everywhere, regardless of actual shipping distance. The seller absorbs the freight cost variation. F.O.B. pricing = buyer pays shipping from factory. Zone pricing = different prices in different geographic zones."},
+
+// ─── ⭐ DR. LOHTIA SAMPLE EXAM — CHAPTER 18 (5 questions) ────────────────────
+{ch:'ch18',q:"A retailer buys a product for $4 and adds $2 to cover operating expenses and profit, making the selling price $6. The percentage markup on the $6 SELLING PRICE is:",
+ opts:["50 percent","33.33 percent","100 percent","20 percent","25 percent"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. Markup on SELLING PRICE = markup ÷ selling price = $2 ÷ $6 = 0.3333 = 33.33%. If it were markup on COST: $2 ÷ $4 = 50%. The base matters! The textbook convention is markup on selling price unless otherwise stated."},
+
+{ch:'ch18',q:"According to the textbook, markups are:",
+ opts:["always stated as a percentage of cost","a percentage of selling price — unless otherwise stated","never stated as a percentage of cost","should never be stated in dollar amounts","None of these is correct"],
+ ans:1, exp:"⭐ DR. LOHTIA EXAM Q. The textbook convention: markups are expressed as a % of SELLING PRICE unless otherwise stated. This is the standard in retailing. Some manufacturers use cost as the base and will say 'markup on cost.' When no base is specified → assume selling price."},
+
+{ch:'ch18',q:"A fast-food store has fixed costs of $1,000,000. Variable cost per serving = $1.89. Selling price per serving = $2.89. How many servings must be sold to BREAK EVEN?",
+ opts:["1,000,000 servings","1,200,000 servings","2,890,000 servings","189,000 servings","This cannot be determined with the information provided"],
+ ans:0, exp:"⭐ DR. LOHTIA EXAM Q. BEP = Fixed Costs ÷ (Price − Variable Cost) = $1,000,000 ÷ ($2.89 − $1.89) = $1,000,000 ÷ $1.00 = 1,000,000 servings. The contribution margin per serving = $1.00. Each serving covers $1 of fixed costs, so you need 1 million servings to cover $1 million in fixed costs."},
+
+{ch:'ch18',q:"The MAIN advantage that marginal analysis has over most other popular pricing methods is that it:",
+ opts:["considers both fixed and variable costs","takes into account the break-even point","allows managers to evaluate pricing alternatives","takes into account BOTH costs AND demand","incorporates the markup chain"],
+ ans:3, exp:"⭐ DR. LOHTIA EXAM Q. Marginal analysis is the ONLY pricing method that considers BOTH costs AND demand simultaneously. Average-cost pricing and break-even analysis only look at costs. Demand-backward pricing only looks at customer willingness to pay. Marginal analysis integrates both → theoretically optimal pricing."},
+
+{ch:'ch18',q:"An auto manufacturer charges more for its hybrid car than a gas-only car. It argues the consumer will SAVE money in the long run because gas savings will exceed the price difference. This manufacturer is using:",
+ opts:["price leadership","price lining","value-in-use pricing","psychological pricing","reference pricing"],
+ ans:2, exp:"⭐ DR. LOHTIA EXAM Q. Value-in-use pricing = setting price based on the ECONOMIC VALUE the product delivers to the customer over time — not just production cost. The hybrid saves fuel money → its value IN USE exceeds its purchase price differential. This justifies the higher price based on total customer savings."},
+
+
+]; // end QUESTIONS
+// ─── FLASHCARDS ───────────────────────────────────────────────────────────────
+const FLASHCARDS = [
+  // Ch 1
+  {ch:'ch1', term:'Marketing', def:"The performance of activities that seek to accomplish an organization's objectives by anticipating customer needs and directing the flow of goods and services to satisfy those needs at a profit."},
+  {ch:'ch1', term:'Marketing Concept', def:"Aim ALL of a firm's efforts at satisfying customers — at a profit. The whole organization, not just the marketing department, must focus on customer needs."},
+  {ch:'ch1', term:'Macro-Marketing', def:'A social process that directs an economy\'s flow of goods and services from producers to consumers in a way that effectively matches supply and demand and accomplishes the objectives of society.'},
+  {ch:'ch1', term:'Universal Functions of Marketing', def:'The 8 functions all marketing systems must perform: buying, selling, transporting, storing, standardizing/grading, financing, risk taking, and market information.'},
+  {ch:'ch1', term:'Production Orientation vs. Marketing Orientation', def:"Production orientation: 'we make products, now let's sell them.' Marketing orientation: 'what do customers need? Let's build products to satisfy them profitably.' Marketing orientation starts with the customer."},
+
+  // Ch 2
+  {ch:'ch2', term:'Marketing Strategy', def:'A target market + a related marketing mix (4 Ps: Product, Place, Promotion, Price). You must identify WHO you are targeting before you can design a mix.'},
+  {ch:'ch2', term:'The 4 Ps (Marketing Mix)', def:"Product, Place, Promotion, Price — the four controllable variables a marketing manager combines to satisfy a target market. The target market itself is NOT one of the Ps."},
+  {ch:'ch2', term:'Target Market', def:'A fairly homogeneous (similar) group of customers to whom a firm wishes to appeal with a specific marketing mix. Homogeneous = they have similar needs.'},
+  {ch:'ch2', term:'Customer Lifetime Value (CLV)', def:'The total profit a firm expects to earn from a customer over the entire relationship. Focuses attention on long-term relationships, not just one-time transactions.'},
+  {ch:'ch2', term:'Marketing Management Process', def:'Plan → Implement → Control. Plan the strategy, implement it in the market, measure results and control/adjust. A continuous cycle.'},
+
+  // Ch 3
+  {ch:'ch3', term:'Four Competitive Situations', def:'(1) Pure competition — many sellers, identical products. (2) Oligopoly — few sellers, interdependent. (3) Monopolistic competition — many sellers, differentiated products. (4) Monopoly — one seller, no substitutes.'},
+  {ch:'ch3', term:'Competitive Advantage', def:"A firm's ability to serve customers better or more profitably than competitors — through lower cost, better quality, superior service, or unique technology. Sustainable = hard for competitors to copy."},
+  {ch:'ch3', term:'PEST Environment', def:'Four external uncontrollable environments: Political/Legal, Economic, Technological, Social/Cultural. Marketers must monitor and adapt to all four — they constrain available strategies.'},
+  {ch:'ch3', term:'Monopolistic Competition', def:'Many sellers each with slightly differentiated products — giving each a small pricing power. Dominant competitive situation in consumer markets. Differentiation is the key competitive tool.'},
+  {ch:'ch3', term:'Oligopoly', def:"Few large sellers whose pricing decisions affect each other. Each firm watches competitors closely. Price wars are common. Examples: airlines, auto industry, wireless carriers."},
+
+  // Ch 4
+  {ch:'ch4', term:'Market Segmentation', def:'Dividing a heterogeneous market into smaller, more homogeneous groups whose members have similar needs — so a firm can design a relevant marketing mix for each segment.'},
+  {ch:'ch4', term:'Segmenting Dimensions', def:'Demographic (age, income, gender), Geographic (region, city size), Psychographic (lifestyle, values, personality), Behavioral (usage rate, benefits sought, loyalty).'},
+  {ch:'ch4', term:'Positioning', def:"How customers see a brand or product relative to competitors — the place it occupies in their minds. Volvo = safety. BMW = driving performance. Positioning is about perception, not just features."},
+  {ch:'ch4', term:'Generic Market vs. Product-Market', def:'Generic market = customers with similar needs that different product types could satisfy (e.g., entertainment). Product-market = narrows to customers seeking the same type of product (e.g., streaming video).'},
+  {ch:'ch4', term:'Target Marketing vs. Mass Marketing', def:'Mass marketing = one mix for everyone. Target marketing = design specific mixes for specific segments. Target marketing is more efficient because the mix is tailored to actual customer needs.'},
+
+  // Ch 5
+  {ch:'ch5', term:'PSSP Hierarchy of Needs', def:'Physiological (food, water) → Safety/Security (stability, protection) → Social/Belonging (love, friendship) → Personal/Self-actualization (esteem, growth). Lower needs must be met before higher ones motivate.'},
+  {ch:'ch5', term:'Problem-Solving Continuum', def:'Routinized response behavior (low involvement, habit) → Limited problem solving (some search) → Extensive problem solving (high involvement, major new purchase). Involvement drives the depth of the buying process.'},
+  {ch:'ch5', term:'Learning (Consumer Behavior)', def:"A change in a person's thought processes or behavior caused by experience. If using a product yields satisfaction, the buyer learns to buy it again. Reinforcement strengthens; bad experience extinguishes."},
+  {ch:'ch5', term:'Attitude', def:"A person's point of view toward something — an evaluation or feeling, positive or negative. Attitudes have cognitive (beliefs), affective (feelings), and behavioral (intention) components. Hard to change."},
+  {ch:'ch5', term:'Social Influences on Consumer Behavior', def:'Family (most powerful), reference groups (groups consumers look to for guidance), social class (correlates with product preferences), and culture (shared values and norms) all shape buying decisions.'},
+
+  // Ch 7
+  {ch:'ch7', term:'Marketing Information System (MIS)', def:'An organized, ongoing system for continually gathering, accessing, and analyzing marketing information that decision-makers need. Broader than a one-time study — it provides continuous intelligence.'},
+  {ch:'ch7', term:'5-Step Scientific Method', def:'(1) Define the problem, (2) Analyze the situation (review secondary data), (3) Get problem-specific data (primary data), (4) Interpret the data, (5) Solve the problem. Step 1 is most critical.'},
+  {ch:'ch7', term:'Primary vs. Secondary Data', def:'Primary = new data collected for this specific research problem (surveys, observation, experiments). Secondary = already collected for another purpose — faster/cheaper but may not fit perfectly.'},
+  {ch:'ch7', term:'Big Data — 4 Vs', def:'Volume (enormous amounts), Variety (many types — structured, social, unstructured), Velocity (generated and processed rapidly), Veracity (accuracy/trustworthiness). All four create marketing opportunities and challenges.'},
+  {ch:'ch7', term:'Qualitative vs. Quantitative Research', def:"Qualitative (focus groups, in-depth interviews) = explores 'why' and 'how' — rich insights, not statistically representative. Quantitative (surveys, experiments) = measures, counts, and tests statistically."},
+
+  // Ch 8
+  {ch:'ch8', term:'Consumer Product Classes', def:"Convenience (staples, impulse, emergency) — frequent, low effort. Shopping (homogeneous, heterogeneous) — compare before buying. Specialty — strong brand preference, will not substitute. Unsought — customers do not actively seek these products."},
+  {ch:'ch8', term:'Business Product Classes', def:'Installations (major capital items), Accessories (smaller capital items), Raw Materials (become part of product), Components (processed parts), Supplies (MRO), Professional Services.'},
+  {ch:'ch8', term:'Brand', def:"A name, term, symbol, design, or combination that identifies a seller's product and differentiates it from competitors. Individual brand = unique name per product. Family brand = one name for multiple products."},
+  {ch:'ch8', term:'Product Line vs. Product Assortment', def:'Product line = a group of closely related products sold by one firm. Product assortment = ALL the product lines a firm sells. Managing width (number of lines) and depth (items per line) is a key strategic decision.'},
+  {ch:'ch8', term:'Warranty', def:'A guarantee that a product will perform as expected, reducing purchase risk. Express warranty = written. Implied warranty = created by law. Important for expensive, complex, or unfamiliar products.'},
+
+  // Ch 9
+  {ch:'ch9', term:'Product Life Cycle (PLC) Stages', def:'Introduction (inform, losses/low profit) → Growth (competition enters, profits peak then fall) → Maturity (saturation, reminder/persuasive ads, declining profits) → Decline (cut costs, phase out).'},
+  {ch:'ch9', term:'5 Characteristics of Innovation (Adoption Rate)', def:'(1) Relative advantage (better than what it replaces?), (2) Compatibility (fits existing values/habits?), (3) Complexity (hard to understand?), (4) Trialability (can you try it?), (5) Observability (visible to others?).'},
+  {ch:'ch9', term:'Fad vs. Fashion vs. Style', def:'Fad = rapid rise and fall (fidget spinners). Fashion = a currently popular style that recurs in cycles. Style = a basic, enduring form (e.g., shirt collar width). PLC applies to all three at different speeds.'},
+  {ch:'ch9', term:'PLC Applies to Categories, Not Brands', def:"The product life cycle describes a product CATEGORY or FORM, not an individual brand. 'Smartphones' as a category has a PLC; individual brand fortunes within that category vary widely."},
+  {ch:'ch9', term:'New Product Development Process', def:'Idea generation → Idea screening → Concept evaluation → Product development (prototypes) → Test marketing → Commercialization (launch). Most ideas are eliminated before reaching launch.'},
+
+  // Ch 10
+  {ch:'ch10', term:'Channel of Distribution', def:'Any series of firms or individuals who participate in the flow of products from producer to final user. Includes manufacturers, wholesalers, retailers, agents, and brokers.'},
+  {ch:'ch10', term:'Direct vs. Indirect Channel', def:'Direct = producer sells straight to final users (Dell, GEICO, farmers market). Indirect = uses intermediaries (wholesalers, retailers). Direct = more control; indirect = wider reach, lower producer cost per unit.'},
+  {ch:'ch10', term:'Distribution Intensity', def:'Intensive = as many outlets as possible (convenience products). Selective = limited outlets meeting standards (shopping products). Exclusive = one or few outlets per area (specialty/prestige products).'},
+  {ch:'ch10', term:'Discrepancy of Quantity & Assortment', def:'Quantity: producers make large amounts; consumers buy small amounts — intermediaries break bulk. Assortment: producers specialize narrowly; consumers want variety — retailers assemble broad assortments. These explain WHY intermediaries exist.'},
+  {ch:'ch10', term:'Vertical Marketing System (VMS)', def:'A channel where members act as a unified system. Corporate VMS = one firm owns multiple levels. Contractual VMS = franchises. Administered VMS = a dominant leader coordinates the channel. Better coordination, lower conflict.'},
+
+  // Ch 12
+  {ch:'ch12', term:'Retailer vs. Wholesaler', def:'Retailer = sells to FINAL CONSUMERS for personal use. Wholesaler = sells to OTHER BUSINESSES (retailers, manufacturers). The customer type — not store type — determines the distinction.'},
+  {ch:'ch12', term:'Wheel of Retailing', def:'New retailers enter as low-price, low-service operations → gradually upgrade and raise prices → become vulnerable to new low-price entrants. Explains the evolution of retail formats over time.'},
+  {ch:'ch12', term:'Scrambled Merchandising', def:'A retailer adding product lines outside its traditional category to increase store traffic and profit per square foot. Example: pharmacies selling cosmetics and greeting cards.'},
+  {ch:'ch12', term:'Types of Wholesalers', def:'Merchant wholesalers (own goods): full-service, limited-service (drop-shipper, truck jobber, rack jobber, cash-and-carry). Agents/brokers: do NOT own goods, earn commission, bring buyers and sellers together.'},
+  {ch:'ch12', term:'Mass Merchandisers', def:"Large-scale retailers competing on low prices and wide assortment: supermarkets (food-focused), discount houses (Walmart, Target), warehouse clubs (Costco — membership), convenience stores (higher prices, quick trips)."},
+
+  // Ch 13
+  {ch:'ch13', term:'AIDA Model', def:'The four promotion jobs: Attention → Interest → Desire → Action. Every promotion tool is evaluated by how well it moves customers through these stages.'},
+  {ch:'ch13', term:'Integrated Marketing Communications (IMC)', def:'The intentional coordination of every communication from a firm to a target customer to convey a consistent and complete message.'},
+  {ch:'ch13', term:'Personal Selling', def:'Direct spoken communication between sellers and potential customers — usually face-to-face. Allows quick feedback and adapting the 4 Ps on the spot; expensive to maintain.'},
+  {ch:'ch13', term:'Advertising', def:'Any PAID form of nonpersonal presentation of ideas, goods, or services by an identified sponsor. Examples: TV, radio, magazines, digital ads.'},
+  {ch:'ch13', term:'Publicity', def:'Any UNPAID form of nonpersonal presentation of ideas, goods, or services. Includes earned media like news stories, customer reviews, and social media posts.'},
+  {ch:'ch13', term:'Sales Promotion', def:'Promotion activities — other than advertising, publicity, and personal selling — that stimulate interest, trial, or purchase. Examples: coupons, samples, contests, POP displays.'},
+  {ch:'ch13', term:'Push Strategy', def:'Using promotion tools aimed at channel members (wholesalers, retailers) to encourage them to carry and sell the product. Emphasizes personal selling to the trade.'},
+  {ch:'ch13', term:'Pull Strategy', def:'Using promotion aimed at final consumers to create demand so consumers ask intermediaries for the product. Uses mass selling (ads, coupons) to stimulate consumer demand.'},
+  {ch:'ch13', term:'Noise', def:'Any distraction that reduces the effectiveness of the communication process. Can be literal (static) or figurative (competing messages, viewer distraction).'},
+  {ch:'ch13', term:'Encoding / Decoding', def:'Encoding: the source translates a message idea into words or symbols. Decoding: the receiver interprets the message. Miscommunication happens when meanings differ.'},
+  {ch:'ch13', term:'Adoption Curve', def:'Shows when different groups accept new ideas: Innovators (3–5%) → Early Adopters (10–15%) → Early Majority (34%) → Late Majority (34%) → Laggards (5–16%).'},
+  {ch:'ch13', term:'Task Method', def:'Zero-based budgeting for promotion — you determine what must be done to reach promotion objectives, then estimate the cost. Most customer-oriented budgeting approach.'},
+
+  // Ch 15
+  {ch:'ch15', term:'Pioneering Advertising', def:'Advertising that develops primary demand — demand for the general product idea, not a specific brand. Most common during market introduction.'},
+  {ch:'ch15', term:'Competitive Advertising', def:"Advertising that promotes a specific brand. Three types: (1) Direct competitive (buy now), (2) Indirect competitive (our product is better), (3) Comparative (names competitors)."},
+  {ch:'ch15', term:'Reminder Advertising', def:'Advertising used when target customers already have positive attitudes. Keeps the brand top-of-mind. Used in market maturity by established brands.'},
+  {ch:'ch15', term:'Institutional Advertising', def:"Corporate advertising that promotes a company's name, image, and goodwill — not a specific product. Focuses on building reputation and developing goodwill."},
+  {ch:'ch15', term:'Cooperative Advertising', def:"A manufacturer shares advertising costs with channel members (retailers/wholesalers) who run ads featuring the manufacturer's brand."},
+  {ch:'ch15', term:'Slotting Fee (Stocking Fee)', def:'A payment from a producer to a retailer to secure shelf space for a new product. Listed as an allowance in the channel-member price equation.'},
+  {ch:'ch15', term:'Sales Promotion', def:'Short-term incentives to stimulate trial or purchase: coupons, samples, rebates, contests/sweepstakes, POP displays, trade shows.'},
+  {ch:'ch15', term:'Direct Response Promotion', def:'Direct communication between seller and individual customer (not face-to-face) designed to prompt immediate feedback. Examples: direct mail, email marketing, infomercials.'},
+
+  // Ch 16
+  {ch:'ch16', term:'Paid Media', def:'Messages from a brand communicated through channels the brand PAYS to access. High message control, potentially large reach, less trusted by consumers. Examples: TV ads, paid search.'},
+  {ch:'ch16', term:'Owned Media', def:"Promotional messages communicated through channels the brand directly CONTROLS. Examples: company website, brand blog, email newsletter, brand-managed social media profiles."},
+  {ch:'ch16', term:'Earned Media', def:'Promotional messages generated by THIRD PARTIES (journalists, customers) — not by the company. Most trusted but least control. Examples: news stories, customer reviews, word-of-mouth.'},
+  {ch:'ch16', term:'Search Engine Optimization (SEO)', def:"Techniques used to improve a site's organic (unpaid) ranking in search engine results so customers find you when they search. Part of owned/earned media strategy."},
+  {ch:'ch16', term:'Pass-Along / Viral Marketing', def:'Content that customers share with others — online reviews, social shares, word-of-mouth recommendations. A form of earned media that spreads organically.'},
+  {ch:'ch16', term:'Brand Community', def:'A group of consumers who share enthusiasm and a sense of belonging around a brand, often connecting through social media. They generate earned media and build loyalty.'},
+
+  // Ch 17
+  {ch:'ch17', term:'Target Return Objective', def:'A profit-oriented pricing objective that sets a specific profit goal — e.g., 15% ROI or 8% return on sales. Seeks satisfactory, not maximum, profit.'},
+  {ch:'ch17', term:'Sales-Oriented Objective', def:'A pricing objective focused on growing dollar/unit sales volume or market share — regardless of immediate profit effect.'},
+  {ch:'ch17', term:'Status Quo Objective', def:"A 'don't rock the boat' pricing objective — meet competition or maintain stable prices. Chosen by firms satisfied with their current market position."},
+  {ch:'ch17', term:'Skimming Price Policy', def:'Setting a HIGH initial price to skim profits from price-insensitive customers, then lowering price to reach broader market. Works when few substitutes exist and demand is inelastic.'},
+  {ch:'ch17', term:'Penetration Pricing Policy', def:'Setting a LOW initial price to achieve high volume and discourage competitive entry. Aims for large market share; may lower costs through scale.'},
+  {ch:'ch17', term:'Psychological Pricing', def:"Pricing that influences customer perception: (1) Odd-even pricing ($9.99 feels much less than $10), (2) Prestige pricing (high price signals quality/status)."},
+  {ch:'ch17', term:'Quantity Discount', def:'Price reduction for buying larger amounts. Cumulative = based on total purchases over a period. Noncumulative = applies to individual orders only.'},
+  {ch:'ch17', term:'Seasonal Discount', def:'Price reduction for buying during off-season or earlier than normal demand would require. Smooths out demand over time.'},
+  {ch:'ch17', term:'Cash Discount', def:"Price reduction for paying invoices quickly. Example: '2/10 net 30' = 2% off if paid in 10 days, full amount due in 30. Improves seller's cash flow."},
+  {ch:'ch17', term:'Trade (Functional) Discount', def:'Reduction in list price given to channel members who perform marketing functions (storing, transporting, selling) for the producer.'},
+  {ch:'ch17', term:'Push Money (Spiff)', def:"An allowance paid to RETAIL SALESPEOPLE as an incentive to actively promote and sell a specific product. Also called 'spiff.' A trade promotion tool."},
+  {ch:'ch17', term:'Value Pricing', def:'Offering target customers superior value — better quality, service, or total experience — at a price that makes the whole offer attractive. NOT the same as low pricing.'},
+  {ch:'ch17', term:'One-Price Policy', def:'Same price for all customers buying under the same conditions and quantities. Simple, consistent, builds trust. Most U.S. retailers use this policy.'},
+  {ch:'ch17', term:'Flexible-Price Policy', def:'Different customers can pay different prices based on bargaining, relationships, or competitive situations. Common in B2B, car dealerships, real estate.'},
+
+  // Ch 18
+  {ch:'ch18', term:'Markup on Selling Price', def:'Markup expressed as a % of the SELLING PRICE. Formula: markup% = (Price − Cost) / Price. Example: cost $70, price $100 → markup = 30%.'},
+  {ch:'ch18', term:'Markup on Cost', def:'Markup expressed as a % of the COST. Formula: Selling Price = Cost × (1 + markup%). Example: cost $40, 50% markup → price = $60.'},
+  {ch:'ch18', term:'Average-Cost Pricing', def:'Add all costs (fixed + variable), divide by expected unit sales to get average cost, then add a markup. Simple but risky — assumes sales volume you may not achieve.'},
+  {ch:'ch18', term:'Break-Even Analysis', def:'Formula: BEP = Fixed Costs ÷ (Price − Variable Cost per unit). The quantity where total revenue = total costs. Below BEP = loss; above = profit.'},
+  {ch:'ch18', term:'Contribution Margin per Unit', def:'Price minus Variable Cost per unit. Shows how much each unit contributes to covering fixed costs and generating profit. Used in break-even calculations.'},
+  {ch:'ch18', term:'Marginal Analysis (MR = MC)', def:'Profit is maximized when Marginal Revenue = Marginal Cost. Any unit where MR > MC adds to profit; any where MR < MC reduces profit.'},
+  {ch:'ch18', term:'Price Elasticity', def:'% change in quantity demanded ÷ % change in price. Elastic (>1): customers are sensitive — big drop in quantity when price rises. Inelastic (<1): little change in quantity when price rises.'},
+  {ch:'ch18', term:'Demand-Backward Pricing', def:'Start with what customers will pay (demand), then work backward to see if you can be profitable at that price. The marketing-oriented approach to pricing.'},
+  {ch:'ch18', term:'Value-in-Use Pricing', def:'Setting price based on the economic value the product delivers to the customer. If a machine saves $100K/year, you can price it higher than cost-based pricing would suggest.'},
+  {ch:'ch18', term:'Full-Line Pricing', def:'Setting prices for an entire product line so they fit together logically and encourage customers to trade up. Prices should reflect real value differences between items.'},
+];
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
+const LS_KEY = 'mk3010_v1';
+
+function saveState() {
+  try {
+    const state = {
+      chapterScores,
+      globalCorrect,
+      questionHistory,
+      daysCompleted,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(state));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (s.chapterScores) {
+      Object.keys(s.chapterScores).forEach(ch => {
+        if (chapterScores[ch]) chapterScores[ch] = s.chapterScores[ch];
+      });
+    }
+    if (typeof s.globalCorrect === 'number') globalCorrect = s.globalCorrect;
+    if (s.questionHistory) Object.assign(questionHistory, s.questionHistory);
+    if (s.daysCompleted) Object.assign(daysCompleted, s.daysCompleted);
+  } catch(e) {}
+}
+
+function resetProgress() {
+  if (!confirm('Reset ALL progress? This clears every score and cannot be undone.')) return;
+  localStorage.removeItem(LS_KEY);
+  Object.keys(chapterScores).forEach(ch => { chapterScores[ch] = {c:0,t:0}; });
+  globalCorrect = 0;
+  Object.keys(questionHistory).forEach(k => delete questionHistory[k]);
+  Object.keys(daysCompleted).forEach(k => delete daysCompleted[k]);
+  updateBars();
+  buildDailyPlan();
+  document.getElementById('globalScore').textContent = 'Total Correct: 0';
+  alert('Progress reset.');
+}
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentQuiz = [];
+let currentQ = 0;
+let correct = 0;
+let answered = false;
+let quizResults = [];
+let chapterScores = {};
+Object.keys(CHAPTERS).forEach(ch => { chapterScores[ch] = {c:0, t:0}; });
+let globalCorrect = 0;
+let questionHistory = {};  // {stableId: {c:0, t:0, lastDate:'2026-04-27'}}
+let daysCompleted = {};    // {'2026-04-27': true}
+let fcIndex = 0;
+let fcFlipped = false;
+let currentFlashcards = [];
+let termsFilter = 'all';
+let lastQuizConfig = null;
+
+// ─── SCREENS ─────────────────────────────────────────────────────────────────
+function goHome() {
+  ['quizScreen','resultsScreen','flashcardScreen','termsScreen'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('homeScreen').style.display = '';
+  updateBars();
+}
+
+function updateBars() {
+  Object.keys(chapterScores).forEach(ch => {
+    const barId = 'bar' + ch.replace('ch','');
+    const el = document.getElementById(barId);
+    if (!el) return;
+    const s = chapterScores[ch];
+    const pct = s.t > 0 ? Math.round((s.c / s.t) * 100) : 0;
+    el.style.width = pct + '%';
+  });
+  document.getElementById('globalScore').textContent = 'Total Correct: ' + globalCorrect;
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+function toggleAll(cb) {
+  document.querySelectorAll('.chk-ch').forEach(c => c.checked = cb.checked);
+}
+function startQuizFromModal() {
+  const selected = [...document.querySelectorAll('.chk-ch:checked')].map(c => c.value);
+  if (selected.length === 0) { alert('Select at least one chapter.'); return; }
+  closeModal();
+  startQuiz(selected);
+}
+function openChapterQuiz(ch) {
+  startQuiz([ch]);
+}
+function startProfQuiz() {
+  const profQs = QUESTIONS.filter(q => q.exp && q.exp.startsWith('⭐ DR. LOHTIA'));
+  const shuffled = shuffle(profQs);
+  currentQuiz = shuffled;
+  lastQuizConfig = ['ch13','ch15','ch16','ch17','ch18'];
+  currentQ = 0; correct = 0; answered = false; quizResults = [];
+  document.getElementById('quizTitle').textContent = "Dr. Lohtia's 25 Sample Questions";
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('resultsScreen').style.display = 'none';
+  renderQuestion();
+}
+
+// ─── QUIZ ────────────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(chapters) {
+  let pool = shuffle(QUESTIONS.filter(q => chapters.includes(q.ch)));
+  currentQuiz = pool;
+  lastQuizConfig = chapters;
+  currentQ = 0; correct = 0; answered = false; quizResults = [];
+  document.getElementById('quizTitle').textContent = chapters.length === 1 ? CHAPTERS[chapters[0]].title : 'Mixed Quiz';
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('resultsScreen').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (currentQ >= currentQuiz.length) { showResults(); return; }
+  const q = currentQuiz[currentQ];
+  answered = false;
+  document.getElementById('progressFill').style.width = ((currentQ / currentQuiz.length) * 100) + '%';
+  document.getElementById('questionNum').textContent = `Question ${currentQ+1} of ${currentQuiz.length} · ${CHAPTERS[q.ch].label}`;
+  document.getElementById('questionText').textContent = q.q;
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback-box';
+  document.getElementById('nextBtn').className = 'next-btn';
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<div class="opt-letter">${letters[i]}</div><div>${opt}</div>`;
+    div.onclick = () => selectAnswer(i);
+    container.appendChild(div);
+  });
+  document.getElementById('quizInfo').textContent = `Score: ${correct}/${currentQ}`;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = currentQuiz[currentQ];
+  const options = document.querySelectorAll('.option');
+  options.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    if (i === q.ans) opt.classList.add('correct');
+    else if (i === idx && idx !== q.ans) opt.classList.add('wrong');
+  });
+  const isCorrect = idx === q.ans;
+  quizResults.push({ch: q.ch, correct: isCorrect});
+  if (isCorrect) { correct++; globalCorrect++; chapterScores[q.ch].c++; }
+  chapterScores[q.ch].t++;
+  // Per-question history (stable key = first 40 chars of question text)
+  const qKey = q.q.slice(0,40);
+  if (!questionHistory[qKey]) questionHistory[qKey] = {c:0, t:0, ch:q.ch, lastDate:''};
+  questionHistory[qKey].t++;
+  if (isCorrect) questionHistory[qKey].c++;
+  questionHistory[qKey].lastDate = new Date().toISOString().slice(0,10);
+  saveState();
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback-box show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+  document.getElementById('feedbackTitle').textContent = isCorrect ? '✓ Correct!' : `✗ Incorrect — Answer: ${['A','B','C','D'][q.ans]}`;
+  document.getElementById('feedbackText').textContent = q.exp;
+  document.getElementById('nextBtn').className = 'next-btn show';
+  document.getElementById('quizInfo').textContent = `Score: ${correct}/${currentQ+1}`;
+}
+
+function nextQuestion() { currentQ++; renderQuestion(); }
+
+function showResults() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+  const total = currentQuiz.length;
+  const pct = Math.round((correct / total) * 100);
+  document.getElementById('resultsScore').textContent = `${correct}/${total}`;
+  document.getElementById('resultsLabel').textContent = `${pct}% accuracy`;
+  let grade, cls;
+  if (pct >= 90) { grade = 'A — Excellent!'; cls = 'grade-a'; }
+  else if (pct >= 80) { grade = 'B — Good'; cls = 'grade-b'; }
+  else if (pct >= 70) { grade = 'C — Keep Studying'; cls = 'grade-c'; }
+  else { grade = 'D — Review These Chapters'; cls = 'grade-d'; }
+  const g = document.getElementById('resultsGrade');
+  g.textContent = grade; g.className = 'results-grade ' + cls;
+  const breakdown = document.getElementById('resultsBreakdown');
+  const chsInQuiz = [...new Set(currentQuiz.map(q => q.ch))];
+  breakdown.innerHTML = '<div style="font-size:13px;font-weight:700;margin-bottom:8px">This Quiz — By Chapter</div>' +
+    chsInQuiz.map(ch => {
+      const chResults = quizResults.filter(r => r.ch === ch);
+      const chC = chResults.filter(r => r.correct).length;
+      const chT = chResults.length;
+      const chPct = chT > 0 ? Math.round((chC/chT)*100) : 0;
+      const color = chPct >= 80 ? '#22c55e' : chPct >= 60 ? '#f59e0b' : '#ef4444';
+      return `<div class="breakdown-row"><span>${CHAPTERS[ch].label}: ${CHAPTERS[ch].title.substring(0,28)}</span><span style="color:${color};font-weight:700">${chC}/${chT} (${chPct}%)</span></div>`;
+    }).join('');
+  updateBars();
+}
+
+function retryQuiz() { if (lastQuizConfig) startQuiz(lastQuizConfig); }
+
+// ─── FLASHCARDS ───────────────────────────────────────────────────────────────
+function showFlashcards() {
+  currentFlashcards = [...FLASHCARDS];
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('flashcardScreen').style.display = 'block';
+  fcIndex = 0; fcFlipped = false;
+  const chKeys = Object.keys(CHAPTERS);
+  const filterEl = document.getElementById('fcFilter');
+  filterEl.innerHTML = ['all', ...chKeys].map(c =>
+    `<div class="filter-chip ${c==='all'?'active':''}" onclick="fcSetFilter('${c}',this)">${c==='all'?'All Chapters':CHAPTERS[c].label}</div>`
+  ).join('');
+  renderFlashcard();
+}
+
+function fcSetFilter(ch, el) {
+  document.querySelectorAll('#fcFilter .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentFlashcards = ch === 'all' ? [...FLASHCARDS] : FLASHCARDS.filter(f => f.ch === ch);
+  fcIndex = 0; fcFlipped = false;
+  renderFlashcard();
+}
+
+function renderFlashcard() {
+  if (currentFlashcards.length === 0) return;
+  const fc = currentFlashcards[fcIndex];
+  document.getElementById('fcTerm').textContent = fc.term;
+  document.getElementById('fcDef').textContent = fc.def;
+  document.getElementById('fcChTag').textContent = CHAPTERS[fc.ch].label + ' — ' + CHAPTERS[fc.ch].title;
+  document.getElementById('fcCount').textContent = `${fcIndex+1} / ${currentFlashcards.length}`;
+  document.getElementById('fcProgress').textContent = `${fcIndex+1} of ${currentFlashcards.length}`;
+  document.getElementById('fcInner').classList.remove('flipped');
+  fcFlipped = false;
+}
+
+function flipCard() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('fcInner').classList.toggle('flipped', fcFlipped);
+}
+
+function fcNav(dir) {
+  fcIndex = (fcIndex + dir + currentFlashcards.length) % currentFlashcards.length;
+  renderFlashcard();
+}
+
+function shuffleCards() { currentFlashcards = shuffle(currentFlashcards); fcIndex = 0; renderFlashcard(); }
+
+// ─── KEY TERMS ────────────────────────────────────────────────────────────────
+function showTerms() {
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('termsScreen').style.display = 'block';
+  termsFilter = 'all';
+  const chKeys = Object.keys(CHAPTERS);
+  const filterEl = document.getElementById('termsFilter');
+  filterEl.innerHTML = ['all', ...chKeys].map(c =>
+    `<div class="filter-chip ${c==='all'?'active':''}" onclick="termsSetFilter('${c}',this)">${c==='all'?'All':CHAPTERS[c]?.label||c}</div>`
+  ).join('');
+  renderTerms();
+}
+
+function termsSetFilter(ch, el) {
+  document.querySelectorAll('#termsFilter .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  termsFilter = ch;
+  renderTerms();
+}
+
+function renderTerms() {
+  const list = termsFilter === 'all' ? FLASHCARDS : FLASHCARDS.filter(f => f.ch === termsFilter);
+  document.getElementById('termsGrid').innerHTML = list.map(f => `
+    <div class="term-card">
+      <div class="t-name">${f.term}</div>
+      <div class="t-def">${f.def}</div>
+      <div class="t-ch">${CHAPTERS[f.ch].label}</div>
+    </div>`).join('');
+}
+
+// ─── DAILY PLAN ──────────────────────────────────────────────────────────────
+
+const EXAM_TIME = new Date('2026-05-01T19:00:00'); // Friday May 1 @ 7 PM
+
+const STUDY_PLAN = [
+  {
+    date: '2026-04-27', label: 'Sun', name: 'Day 1 — Exam 1 Foundation',
+    chapters: ['ch1','ch2','ch3','ch4','ch5'],
+    goal: 'Lock down the Exam 1 chapters. Marketing concept, 4Ps, segmentation, consumer behavior — these appear in final questions too. Do all 50 questions, then review every wrong answer.',
+    target: 50
+  },
+  {
+    date: '2026-04-28', label: 'Mon', name: 'Day 2 — Exam 2 Foundation',
+    chapters: ['ch7','ch8','ch9','ch10','ch12'],
+    goal: 'Marketing research, product life cycle, channels, retailers. These set up the context for pricing and promotion. Do all 50 questions.',
+    target: 50
+  },
+  {
+    date: '2026-04-29', label: 'Tue', name: 'Day 3 — Final Exam: IMC + Advertising',
+    chapters: ['ch13','ch15','ch16'],
+    goal: 'IMC, AIDA, push/pull, advertising types, digital ads, earned/owned/paid media. These are on the exam Friday. Do all 46 questions TWICE — once to learn, once to test recall.',
+    target: 46
+  },
+  {
+    date: '2026-04-30', label: 'Wed', name: 'Day 4 — Final Exam: Pricing',
+    chapters: ['ch17','ch18'],
+    goal: 'Pricing objectives, discounts, skimming vs. penetration, markup math, break-even. Ch 18 has calculations — work through every wrong answer carefully. Do all 30 questions twice.',
+    target: 30
+  },
+  {
+    date: '2026-05-01', label: 'Thu', name: 'Day 5 — Full Dress Rehearsal',
+    chapters: ['ch13','ch15','ch16','ch17','ch18'],
+    goal: 'All final exam chapters — 76 questions, full mixed, timed. Simulate exam conditions. After 5 PM: flashcards only. No new questions. Rest, sleep early.',
+    target: 76
+  },
+];
+
+function buildDailyPlan() {
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0,10);
+  const msLeft = EXAM_TIME - now;
+
+  // Countdown
+  const countdownEl = document.getElementById('countdownNum');
+  const labelEl = document.getElementById('countdownLabel');
+  if (msLeft <= 0) {
+    countdownEl.textContent = '🎓';
+    labelEl.textContent = 'Good luck!';
+  } else {
+    const hrs = Math.floor(msLeft / 36e5);
+    const days = Math.floor(hrs / 24);
+    const remHrs = hrs % 24;
+    if (days > 0) {
+      countdownEl.textContent = days + 'd ' + remHrs + 'h';
+    } else {
+      countdownEl.textContent = hrs + 'h';
+    }
+    labelEl.textContent = 'until exam';
+  }
+
+  // Day pills
+  const pillsEl = document.getElementById('dayPills');
+  pillsEl.innerHTML = '';
+  STUDY_PLAN.forEach(day => {
+    const pill = document.createElement('div');
+    const isToday = day.date === todayStr;
+    const isPast = day.date < todayStr;
+    const isDone = daysCompleted[day.date] === 'done';
+    pill.className = 'day-pill' + (isToday ? ' today' : '') + ((isPast || isDone) && !isToday ? ' done' : '');
+    pill.textContent = (isDone ? '✓ ' : isToday ? '▶ ' : '') + day.label + ' — ' + day.name.split('—')[0].trim();
+    pillsEl.appendChild(pill);
+  });
+  // Exam pill
+  const examPill = document.createElement('div');
+  examPill.className = 'day-pill exam-day';
+  examPill.textContent = '🎯 Fri — EXAM 7 PM';
+  pillsEl.appendChild(examPill);
+
+  // Today detail
+  const detailEl = document.getElementById('todayDetail');
+  const todayPlan = STUDY_PLAN.find(d => d.date === todayStr);
+
+  if (!todayPlan && now >= EXAM_TIME) {
+    detailEl.innerHTML = '<div class="exam-now-msg">🎯 Exam time! You got this, Ken.</div>';
+    return;
+  }
+
+  if (!todayPlan) {
+    // Between exam date and now — show exam eve message
+    const next = STUDY_PLAN.find(d => d.date > todayStr) || STUDY_PLAN[STUDY_PLAN.length-1];
+    detailEl.innerHTML = `
+      <h3>No plan for today — check back ${next.label}</h3>
+      <p class="today-goal" style="margin:0">Or jump into any chapter above to get ahead.</p>
+    `;
+    return;
+  }
+
+  const isFinalDay = todayPlan.date === '2026-05-01';
+  const chColors = {ch13:'#3b82f6',ch15:'#8b5cf6',ch16:'#06b6d4',ch17:'#f59e0b',ch18:'#10b981',
+    ch1:'#e11d48',ch2:'#f97316',ch3:'#eab308',ch4:'#84cc16',ch5:'#14b8a6',
+    ch7:'#6366f1',ch8:'#ec4899',ch9:'#f43f5e',ch10:'#0ea5e9',ch12:'#a855f7'};
+
+  const chTags = todayPlan.chapters.map(ch => {
+    const num = ch.replace('ch','');
+    return `<span class="today-ch-tag" style="background:${chColors[ch]}22;color:${chColors[ch]};border:1px solid ${chColors[ch]}44">Ch ${num}</span>`;
+  }).join('');
+
+  detailEl.innerHTML = `
+    <h3>${todayPlan.name}</h3>
+    <p class="today-goal">${todayPlan.goal}</p>
+    <div class="today-chapters">${chTags}</div>
+    <button class="start-today-btn" onclick="startTodayQuiz(${JSON.stringify(todayPlan.chapters)})">
+      ▶ Start Today's ${todayPlan.target}-Question Session
+    </button>
+  `;
+}
+
+function startTodayQuiz(chapters) {
+  const today = new Date().toISOString().slice(0,10);
+  daysCompleted[today] = daysCompleted[today] || 'started';
+  saveState();
+  startQuiz(chapters);
+}
+
+function markDayDoneAndGoHome() {
+  const today = new Date().toISOString().slice(0,10);
+  daysCompleted[today] = 'done';
+  saveState();
+  goHome();
+}
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+// Init
+loadState();
+updateBars();
+buildDailyPlan();
+// Refresh countdown every minute
+setInterval(() => {
+  const countdownEl = document.getElementById('countdownNum');
+  if (countdownEl) buildDailyPlan();
+}, 60000);
+</script>
+</body>
+</html>
